@@ -1,0 +1,104 @@
+@use 'fonts';
+@use 'variables';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: variables.$bg-color;
+  color: variables.$text-color;
+  font-family: variables.$main-font;
+}
+
+main {
+  padding-top: 100px;
+}
+
+.message-error {
+  color: variables.$error-color;
+}
+
+.container {
+  max-width: 1580px;
+  padding: 0px clamp(20px, 6vw, 140px);
+  margin: 0px auto;
+}
+
+.space-top-md {
+  padding-top: clamp(1rem, 3vw, 2rem);
+}
+
+.space-bottom-md {
+  padding-bottom: clamp(1rem, 3vw, 2rem);
+}
+
+.space-bottom-lg {
+  padding-bottom: clamp(2rem, 6vw, 4.5rem);
+}
+
+.message {
+  &--success {
+    background-color: variables.$primary-color;
+    color: white;
+    font-weight: 400;
+    padding: 20px;
+    border-radius: 10px;
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.language-switcher {
+  position: relative;
+
+  &__active {
+    cursor: pointer;
+    text-transform: uppercase;
+    padding: 7px 10px;
+    border-radius: 100px;
+    border: 2px solid variables.$bg-color;
+  }
+
+  &__dropdown {
+    display: none;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 10px;
+    background-color: white;
+    border-radius:  0 10px 10px 10px;
+    position: absolute;
+    box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+
+    span {
+      width: 20px;
+      height: 20px;
+      border-radius: 200px;
+      background-size: cover;
+    }
+  }
+
+  &:hover {
+    .language-switcher__dropdown {
+      display: flex;
+    }
+
+    .language-switcher__active {
+      border-radius: 20px 20px 0 0;
+      background-color: variables.$bg-color;
+    }
+  }
+}

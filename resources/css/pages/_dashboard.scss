@@ -1,0 +1,135 @@
+@use '../variables';
+
+.dashboard {
+    &-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 30px;
+
+        aside {
+            width: 270px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+
+            @media screen and (max-width: 950px) {
+                width: 100%;
+            }
+
+            ul {
+                list-style-type: none;
+
+                li {
+                    margin: 1rem 0;
+                    a, button {
+                        display: block;
+                        text-decoration: none;
+                        color: variables.$text-color;
+                        border: none;
+                        background-color: transparent;
+                        padding: 0;
+                        font-size: 1rem;
+                        font-family: variables.$main-font;
+                        font-weight: 300;
+                        cursor: pointer;
+                        transition: all .3s;
+
+                        &:hover {
+                            color: variables.$primary-color;
+                        }
+                    }
+
+                    i {
+                        margin-right: 10px;
+                        color: variables.$secondary-color;
+                    }
+                }
+            }
+        }
+
+        section {
+            width: calc(100% - 300px);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            
+             @media screen and (max-width: 950px) {
+                width: 100%;
+            }
+        }
+    }
+}
+
+.upload-picture {
+    .preview {
+        margin: 0 auto;
+        width: 150px;
+        height: 150px;
+        border-radius: 200px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        border: 3px solid variables.$bg-color;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+.tags {
+    &-wrapper {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 5px;
+        width: 100%;
+
+        .tag-pill {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 50px;
+            background-color: variables.$bg-color;
+            padding-left: 12px;
+            gap: 5px;
+
+            .remove {
+                width: 30px;
+                height: 30px;
+                padding-top: 2px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: variables.$text-color;
+                cursor: pointer;
+                border: none;
+                padding-right: 5px;
+                background-color: transparent;
+                border-left: 1px solid #c1c1c1;
+            }
+        }
+    }
+
+    &-add {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px;
+        width: 100%;
+        margin-top: 10px;
+
+        button {
+            height: 43px;
+            width: 43px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}

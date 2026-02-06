@@ -1,0 +1,182 @@
+@use '../variables';
+
+.user_list {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-top: 10px;
+
+    &-item {
+        transition: all .3s;
+
+        &:not(:last-of-type) {
+            border-bottom: 1px solid variables.$bg-color;
+        }
+
+        &:hover {
+            transform: scale(1.005);
+
+            .user_list-item__action {
+                background-color: variables.$secondary-color !important;
+                color: #fff !important;
+            }
+        }
+
+        a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 15px 0;
+            text-decoration: none;
+            color: variables.$text-color;
+        }
+
+
+        &__info {
+            flex: 1;
+            p {
+                &:first-of-type {
+                    font-weight: 500;
+                    font-size: 1.1rem;
+                }
+
+                &:last-of-type {
+                    margin-top: 5px;
+                    font-size: .9rem;
+                }
+            }
+        }
+
+        &__action {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            border-radius: 200px;
+            border: 1px solid variables.$bg-color;
+            color: variables.$text-color;
+            transition: all .3s;
+
+            &:hover {
+                background-color: variables.$secondary-color;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.user_edit {
+    &-back {
+        text-decoration: none;
+        color: variables.$text-color;
+        font-size: .9rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        button, 
+        a {
+            background-color: variables.$error-color !important;
+            border: 1px solid variables.$error-color !important;
+            font-size: .8rem;
+            text-decoration: none;
+            padding: 8px 10px;
+
+            &:hover {
+                color: white !important;
+                box-shadow: 0px 0px 15px 0px rgba(231, 76, 60, 0.78);
+            }
+        }
+
+        a {
+            background-color: variables.$primary-color !important;
+            border: 1px solid variables.$primary-color !important;
+            &:hover {
+                box-shadow: 0px 0px 15px 0px rgba(variables.$primary-color, 0.78);
+            }
+        }
+
+    }
+
+    &-form {
+        .form-actions {
+            margin-top: 15px;
+        }
+    }
+}
+
+.users-overview {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    &__item {
+        width: calc(33.33% - 20px);
+        background-color: white;
+        border-radius: 10px;
+
+        @media screen and (max-width: 1150px) {
+            width: calc(50% - 20px);
+        }
+
+        @media screen and (max-width: 950px) {
+            width: 100%;
+        }
+
+        &--tags {
+            width: 100%;
+            display: flex;
+            gap: 5px;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+
+            span {
+                background-color: variables.$bg-color;
+                padding: 3px 8px;
+                font-size: .8rem;
+                border-radius: 20px;
+            }
+        }
+
+        &--content {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+
+            h4 {
+                font-size: 1.1rem;
+                color: variables.$text-color;
+            }
+
+            p {
+                font-size: .8rem;
+            }
+        }
+
+        &--image {
+            min-width: 75px;
+            height: 75px;
+            border-radius: 200px;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+    }
+}
