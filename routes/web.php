@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'account'])->name('dashboard');
     Route::post('/dashboard', [AuthController::class, 'edit'])->name('account.edit');
 
+    Route::get('/dashboard/test', [JobPostController::class, 'getDestinations'])->name('dashboard.test');
     Route::get('/dashboard/jobs', [JobPostController::class, 'index'])->name('dashboard.jobs');
     Route::get('/dashboard/jobs/create', [JobPostController::class, 'create'])->name('dashboard.jobs.create');
     Route::post('/dashboard/jobs/create', [JobPostController::class, 'store'])->name('dashboard.jobs.store');

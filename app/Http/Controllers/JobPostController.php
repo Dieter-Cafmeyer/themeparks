@@ -8,22 +8,19 @@ use App\Models\Tag;
 use App\Models\JobPostMedia;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Services\ThemeParksApi;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 
 class JobPostController extends Controller
 {
-    public function getJobsFromJobtoolz(JobtoolzService $jobtoolz)
+    public function getDestinations(ThemeParksApi $destinations)
     {
-        $jobs = $jobtoolz->getJobs();
-        $locations = $jobtoolz->getLocations();
+        $destinations = $destinations->destinations();
 
-        dd($jobs);
+        dd($destinations);
 
-        return Inertia::render('Dashboard/Jobs', [
-            'jobs' => $jobs,
-        ]);
     }
 
 
