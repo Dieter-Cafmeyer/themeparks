@@ -5,9 +5,9 @@
                 <li>
                     <Link :href="route('dashboard')"><i class="fas fa-user"></i> Account</Link>
                 </li>
-
+                
                 <li>
-                    <Link :href="route('dashboard.jobs')"><i class="fas fa-briefcase"></i> Jobs</Link>
+                    <Link :href="route('admin.parks')"><i class="fas fa-toggle-off"></i> Parks</Link>
                 </li>
 
                 <li>

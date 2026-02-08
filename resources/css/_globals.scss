@@ -48,15 +48,16 @@ main {
 
 .message {
   &--success {
-    background-color: variables.$primary-color;
+    background-color: variables.$success-color;
     color: white;
     font-weight: 400;
     padding: 20px;
     border-radius: 10px;
     position: fixed;
     bottom: 10px;
+    z-index: 100;
     left: 50%;
-    transform: translateY(-50%);
+    transform: translateX(-50%);
   }
 }
 

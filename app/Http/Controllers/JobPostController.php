@@ -15,15 +15,6 @@ use Illuminate\Support\Facades\Storage;
 
 class JobPostController extends Controller
 {
-    public function getDestinations(ThemeParksApi $destinations)
-    {
-        $destinations = $destinations->destinations();
-
-        dd($destinations);
-
-    }
-
-
     public function index()
     {
         return Inertia::render('Dashboard/Jobs/Index', [ 

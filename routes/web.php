@@ -1,12 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\JobPostController;
+use App\Http\Controllers\ParkOverviewController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', [JobPostController::class, 'overview'])->name('jobs');
+Route::get('/', [ParkOverviewController::class, 'index'])->name('parks');
+Route::get('/parks/{id}', [ParkOverviewController::class, 'detail'])->name('parks.detail');
+
 Route::get('/jobs/{jobPost}', [JobPostController::class, 'detail'])->name('jobs.detail');
 
 Route::get('/users', [UserController::class, 'overview'])->name('users');
@@ -34,6 +36,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/parks', [ParkOverviewController::class, 'edit'])->name('admin.parks');
+    Route::put('/admin/destinations/{destination}', [ParkOverviewController::class, 'updateDestination'])->name('admin.destinations.update');
+    Route::put('/admin/parks/{park}', [ParkOverviewController::class, 'updatePark'])->name('admin.parks.update');
+
     Route::get('/dashboard/users', [UserController::class, 'index'])->name('dashboard.users');
     Route::get('/dashboard/users/{user}', [UserController::class, 'edit'])->name('dashboard.users.edit');
     Route::post('/dashboard/users/{user}', [UserController::class, 'update'])->name('dashboard.users.update');

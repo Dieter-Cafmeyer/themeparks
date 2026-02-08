@@ -2188,7 +2188,7 @@
     "src": "resources/assets/logo.png"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-CtkqmiEY.css",
+    "file": "assets/app-DKMx6oeH.css",
     "src": "resources/css/app.scss",
     "isEntry": true,
     "name": "app",
@@ -2197,13 +2197,13 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DbkQBlgU.js",
+    "file": "assets/app-DLMpiXNH.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
       "assets/app-CZ1GcGA4.css",
-      "assets/app-CtkqmiEY.css"
+      "assets/app-DKMx6oeH.css"
     ],
     "assets": [
       "assets/logo-TsCV1G6H.png",

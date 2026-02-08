@@ -42,12 +42,12 @@ class ThemeParksApi
             ->get("/destination/{$slug}")->throw()->json();
     }
 
-        /**
-     * Get a single park by slug
+    /**
+     * Get a single park by id
      */
-    public function park(string $slug): array
+    public function park(string $id): array
     {
-        return $this->client()->get("/park/{$slug}")->throw()->json();
+        return $this->client()->get("/entity/{$id}")->throw()->json();
     }
 
     /**

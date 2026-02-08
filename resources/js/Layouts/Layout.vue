@@ -6,14 +6,11 @@ import LanguageSwitcher from '../Pages/Components/LanguageSwitcher.vue';
     <div>
         <header class="header">
             <div class="container">
-                <Link :href="route('jobs')">
-                    <img src="../../assets/logo.png" class="logo" alt="">
-                </Link>
 
                 <nav class="main_navigation">
                     <ul>
                         <li>
-                            <Link :href="route('jobs')">Jobs</Link>
+                            <Link :href="route('parks')">Parks</Link>
                         </li>
                         <li>
                             <Link :href="route('users')">Users</Link>

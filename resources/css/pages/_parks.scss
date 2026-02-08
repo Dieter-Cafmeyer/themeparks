@@ -1,0 +1,141 @@
+@use '../variables';
+
+.park {
+    &_overview {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        &--title {
+            text-transform: uppercase;
+            font-size: .9rem;
+            font-weight: 700;
+            width: 100%;
+        }
+    }
+
+    &_item {
+        background: #ffffff;
+        border-radius: variables.$border-radius;
+        overflow: hidden;
+        transition: all .3s ease;
+        width: 100%;
+
+        &:hover {
+            transform: scale(1.02);
+            box-shadow: variables.$box-shadow;
+        }
+
+        >a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: variables.$primary-color;
+            text-decoration: none;
+
+            h4 {
+                color: variables.$primary-color;
+            }
+
+            >i {
+                padding: 10px;
+                margin-right: 10px;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 200px;
+                background-color: variables.$bg-color;
+            }
+        }
+
+        &--wrapper {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        }
+
+        &--image {
+            width: 90px;
+            height: 90px;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        &--content {
+            h4 {
+                color: #616368;
+                font-size: 1rem;
+                font-weight: 400;
+            }
+        }
+
+
+    }
+
+    &_detail {
+        &--image {
+            max-height: 50vh;
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+
+            img {
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                width: 100%;
+            }
+        }
+
+        &--parkname {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: variables.$bg-color;
+            padding: 15px 60px;
+            min-width: 400px;
+            text-align: center;
+            max-width: 95%;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+
+            @media screen and (max-width: 500px) {
+                width: 90%;
+                min-width: initial;
+            }
+
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                width: 20px;
+                height: 20px;
+                background: transparent;
+            }
+
+            &::before {
+                left: -20px;
+                border-bottom-right-radius: 20px;
+                box-shadow: 20px 20px 0 20px variables.$bg-color;
+            }
+
+            &::after {
+                right: -20px;
+                border-bottom-left-radius: 20px;
+                box-shadow: -20px 20px 0 20px variables.$bg-color;
+            }
+        }
+    }
+}
