@@ -4,7 +4,7 @@ import { router } from '@inertiajs/vue3'
 
 import DashboardLayout from '../../../Layouts/Dashboard.vue'
 import Layout from '../../../Layouts/Layout.vue'
-import SwitchToggle from '../../Components/SwitchToggle.vue'
+import SwitchToggle from '../../Components/Form/SwitchToggle.vue'
 
 defineOptions({
     layout: [Layout, DashboardLayout]

@@ -51,50 +51,35 @@ class ThemeParksApi
     }
 
     /**
-     * Get all rides for a park
+     * Get all attractions for a park
      */
-    public function rides(string $parkSlug): array
+    public function attractions(string $id): array
     {
-        return $this->client()->get("/rides/{$parkSlug}")->throw()->json();
+        return $this->client()->get("/entity/{$id}/live")->throw()->json();
+    }
+    /**
+     * Get all children, like restaurants and shows for a park
+     */
+    public function children(string $id): array
+    {
+        return $this->client()->get("/entity/{$id}/children")->throw()->json();
     }
 
     /**
-     * Get a single ride by slug
+     * Get a schedule by id
      */
-    public function ride(string $slug): array
+    public function schedule(string $id): array
     {
-        return $this->client()->get("/ride/{$slug}")->throw()->json();
-    }
-
-    /**
-     * Get all events for a park
-     */
-    public function events(string $parkSlug): array
-    {
-        return $this->client()->get("/events/{$parkSlug}")->throw()->json();
-    }
-
-    /**
-     * Get a single event by slug
-     */
-    public function event(string $slug): array
-    {
-        return $this->client()->get("/event/{$slug}")->throw()->json();
-    }
-
-    /**
-     * Get schedules for a park
-     */
-    public function schedules(string $parkSlug): array
-    {
-        return $this->client()->get("/schedules/{$parkSlug}")->throw()->json();
+        return $this->client()->get("/entity/{$id}/schedule")->throw()->json();
     }
 
     /**
      * Get schedule for a specific date
      */
-    public function schedule(string $parkSlug, string $date): array
+    public function scheduleByMonth(string $id, string $date): array
     {
-        return $this->client()->get("/schedule/{$parkSlug}/{$date}")->throw()->json();
+        $year = date('Y', strtotime($date));
+        $month = date('m', strtotime($date));
+        return $this->client()->get("/schedule/{$id}/{$year}/{$month}")->throw()->json();
     }
 }

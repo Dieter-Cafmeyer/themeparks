@@ -20,6 +20,9 @@ const users = JSON.parse(JSON.stringify(props.users));
     <div class="user_list">
       <article class="user_list-item" v-for="user in users" :key="user.id">
         <Link :href="route('dashboard.users.edit', user.id)">
+        <div class="users-overview__item--image">
+          <img :src="'/storage/' + user.profile_picture">
+        </div>
         <div class="user_list-item__info">
           <p>{{ user.firstname }} {{ user.name }}</p>
           <p>{{ user.email }}</p>

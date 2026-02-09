@@ -1,5 +1,5 @@
 <script setup>
-import SideBar from '../Pages/Components/SideBar.vue';
+import SideBar from '../Pages/Components/Dashboard/SideBar.vue';
 import { usePage } from "@inertiajs/vue3";
 
 const page = usePage();

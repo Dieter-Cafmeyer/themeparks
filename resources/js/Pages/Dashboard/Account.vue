@@ -5,7 +5,7 @@ import { ref } from 'vue';
 import DashboardLayout from '../../Layouts/Dashboard.vue'
 import Layout from '../../Layouts/Layout.vue'
 
-import TextInput from '../Components/TextInput.vue';
+import TextInput from '../Components/Form/TextInput.vue';
 
 defineOptions({
   layout: [Layout, DashboardLayout]

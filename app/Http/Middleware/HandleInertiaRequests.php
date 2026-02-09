@@ -40,6 +40,7 @@ class HandleInertiaRequests extends Middleware
             'auth.user' => fn() => $request->user() ? $request->user()->only('id', 'firstname', 'profile_picture', 'name', 'is_admin') : null,
             'flash' => ['success' => fn () => $request->session()->get('success'),],
             'locale' => fn() => Session::get('locale', config('app.locale')),
+            'translations' => fn () => __('messages'),
         ]);
     }
 }

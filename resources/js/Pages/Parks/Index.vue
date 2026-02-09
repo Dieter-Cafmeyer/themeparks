@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import ParkItem from '../Components/ParkItem.vue';
+import ParkItem from '../Components/Parks/ParkItem.vue';
 
 const props = defineProps({
     destinations: Array,

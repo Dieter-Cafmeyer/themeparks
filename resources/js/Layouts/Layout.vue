@@ -1,5 +1,5 @@
 <script setup>
-import LanguageSwitcher from '../Pages/Components/LanguageSwitcher.vue';
+import LanguageSwitcher from '../Pages/Components/Form/LanguageSwitcher.vue';
 </script>
 
 <template>
