@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->is_admin === true;
     }
+
+    public function favoriteParks()
+    {
+        return $this->belongsToMany(Park::class)->withTimestamps();
+    }
 }

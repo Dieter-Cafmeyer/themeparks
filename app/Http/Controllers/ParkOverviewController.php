@@ -11,11 +11,24 @@ class ParkOverviewController extends Controller
 {
     public function index()
     {
+        $userId = auth()->id();
+
         $destinations = Destination::query()
             ->where('is_active', true)
-            ->with(['parks' => function ($query) {
-                $query->where('is_active', true)
-                    ->orderBy('name');
+            ->with(['parks' => function ($query) use ($userId) {
+                $query->where('is_active', true)->orderBy('name')
+                    ->when($userId, function ($q) use ($userId) {
+                        $q->withExists([
+                            'usersWhoFavorited as is_favorited' => function ($sub) use ($userId) {
+                                $sub->where('user_id', $userId);
+                            }
+                        ]);
+                    })
+                    ->when(!$userId, function ($q) {
+                        $q->addSelect([
+                            'is_favorited' => \DB::raw('false')
+                        ]);
+                    });
             }])
             ->orderBy('name')
             ->get([
@@ -27,7 +40,6 @@ class ParkOverviewController extends Controller
         return Inertia::render('Parks/Index', [
             'destinations' => $destinations,
             'title' => __('messages.destinations'),
-            'search_title' => __('messages.search_resort'),
         ]);
     }
 
@@ -85,14 +97,24 @@ class ParkOverviewController extends Controller
             return strcmp($a['name'] ?? '', $b['name'] ?? '');
         });
 
+        $user = auth()->user();
+        $isFavorited = false;
+
+        if ($user) {
+            $localPark = Park::where('api_id', $id)->first();
+
+            if ($localPark) {
+                $isFavorited = $user->favoriteParks()->where('park_id', $localPark->id)->exists();
+            }
+        }
+
         // Attractions
         $attractions = array_filter($live['liveData'], function ($child) {
             return str_contains(strtolower($child['entityType'] ?? ''), 'attraction');
         });
 
-
         return Inertia::render('Parks/Detail', [
-            'park' => $park,
+            'park' => array_merge($park, ['is_favorited' => $isFavorited], ['internal_id' => $localPark ? $localPark->id : null]),
             'shows' => $shows,
             'map' => $map,
             'attractions' => $attractions,

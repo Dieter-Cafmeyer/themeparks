@@ -96,6 +96,7 @@ const availableFeatures = computed(() => {
     return features
 })
 
+
 function formatDate(date) {
     if (!date) return ''
     return new Date(date).toLocaleTimeString([], {
@@ -122,12 +123,15 @@ function formatDate(date) {
         <div :class="statusClass + ' attractions_item--time'">
             <div v-if="attraction.status === 'OPERATING'">
                 <div v-if="attraction.queue?.STANDBY">
-                    <p>{{ attraction.queue.STANDBY.waitTime }}</p>
+                    <p>{{ attraction.queue.STANDBY.waitTime ?? '0' }}</p>
                     <p>Min</p>
                 </div>
                 <div v-else-if="attraction.operatingHours">
                     {{ t('closes') }}
                     {{ formatDate(attraction.operatingHours[0].endTime) }}
+                </div>
+                <div v-else>
+                    <i style="font-size: 1.2rem;" class="fas fa-circle-check"></i>
                 </div>
             </div>
 
@@ -154,13 +158,13 @@ function formatDate(date) {
             <div class="popup_times"> 
                 <div v-if="standby">
                     <h4> {{ t('standby') }} </h4>
-                    <p>{{ standby.waitTime }}</p> 
+                    <p>{{ standby.waitTime  ?? '0'  }}</p> 
                     <p>{{ t('minutes_short') }}</p>
                 </div>
 
                 <div v-if="singleRider">
                     <h4>{{ t('single_rider') }}</h4>
-                    <p>{{ singleRider.waitTime }}</p> 
+                    <p>{{ singleRider.waitTime ?? '0'  }}</p> 
                     <p>{{ t('minutes_short') }}</p>
                 </div>
             </div>
@@ -170,6 +174,10 @@ function formatDate(date) {
                 <p v-if="returnTime.state === 'AVAILABLE'">
                     <i class="fas fa-circle-check"></i>
                     {{ t('status') }}: {{ returnTime.state }}
+                </p>
+                <p v-else-if="returnTime.state === 'FINISHED'">
+                    <i class="fas fa-circle-xmark"></i>
+                    {{ returnTime.state }}
                 </p>
                 <p v-if="returnTime.returnStart">
                     <i class="fa-regular fa-clock"></i>

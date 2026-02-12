@@ -22,4 +22,9 @@ class Park extends Model
     {
         return $this->belongsTo(Destination::class);
     }
+
+    public function usersWhoFavorited()
+    {
+    return $this->belongsToMany(User::class)->withTimestamps();
+    }
 }

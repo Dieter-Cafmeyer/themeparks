@@ -1,3 +1,28 @@
+<script setup>
+import { router } from '@inertiajs/vue3'
+import { ref, onMounted } from 'vue'
+import FavoriteButton from '../../Components/Parks/FavoriteButton.vue';
+
+const props = defineProps({
+  park: Object
+});
+
+const imageUrl = ref('/storage/parks/placeholder-square.jpg');
+
+onMounted(async () => {
+  try {
+    const res = await fetch(`/storage/parks/${props.park.api_id}.jpg`, { method: 'HEAD' })
+    if (res.ok) {
+      imageUrl.value = `/storage/parks/${props.park.api_id}.jpg`
+    }
+  } catch (e) {
+    console.error('Error checking image:', e)
+  }
+});
+
+
+</script>
+
 <template>
     <article class="park_item">
       <Link :href="route('parks.detail', park.api_id)">
@@ -13,26 +38,8 @@
 
         <i class="fas fa-angle-right"></i> 
       </Link>
+
+      <FavoriteButton :park-id="park.id" :is-favorited="park.is_favorited" />
     </article>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-
-const props = defineProps({
-  park: Object
-})
-
-const imageUrl = ref('/storage/parks/placeholder-square.jpg');
-
-onMounted(async () => {
-  try {
-    const res = await fetch(`/storage/parks/${props.park.api_id}.jpg`, { method: 'HEAD' })
-    if (res.ok) {
-      imageUrl.value = `/storage/parks/${props.park.api_id}.jpg`
-    }
-  } catch (e) {
-    console.error('Error checking image:', e)
-  }
-})
-</script>

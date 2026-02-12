@@ -1,12 +1,15 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { usePage } from '@inertiajs/vue3'
 import ParkItem from '../Components/Parks/ParkItem.vue';
+
+const { props: pageProps } = usePage();
+const t = (key) => pageProps.translations?.[key] ?? key;
 
 const props = defineProps({
     destinations: Array,
     title: String,
     moreInfo: String,
-    search_title: String,
 });
 
 const search = ref('');
@@ -33,7 +36,7 @@ const filteredDestinations = computed(() => {
         <h1 class="space-top-md space-bottom-sm">{{ props.title }}</h1>
 
         <div class="search form-item">
-            <input id="search" v-model="search" type="text" :placeholder="search_title" />
+            <input id="search" v-model="search" type="text" :placeholder="t('search_resort')" />
             <i class="fas fa-magnifying-glass"></i>
         </div>
 

@@ -4,6 +4,7 @@ import { ref } from 'vue';
 
 import DashboardLayout from '../../Layouts/Dashboard.vue'
 import Layout from '../../Layouts/Layout.vue'
+import LanguageSwitcher from '../Components/Form/LanguageSwitcher.vue';
 
 import TextInput from '../Components/Form/TextInput.vue';
 
@@ -63,6 +64,11 @@ const updateAccount = () => {
 <template>
   <div class="dashboard-background">
     <h3>My Account</h3>
+
+    <li>
+      <LanguageSwitcher />
+    </li>
+
 
     <form @submit.prevent="updateAccount">
       <div class="form-item upload-picture">

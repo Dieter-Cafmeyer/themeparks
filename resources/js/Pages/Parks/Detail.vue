@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 
 import Toggle from '../Components/Parks/Toggle.vue';
+import FavoriteButton from '../Components/Parks/FavoriteButton.vue';
 import Attractions from '../Components/Parks/Attractions.vue';
 import Shows from '../Components/Parks/Shows.vue';
 import Map from '../Components/Parks/Map.vue';
@@ -26,6 +27,11 @@ const props = defineProps({
 const activeTab = ref('attractions');
 const lastUpdated = ref(new Date());
 const relativeTime = ref('');
+let showsToggle = false;
+
+function goBack() {
+    window.history.back()
+}
 
 const currentComponent = computed(() => {
     if (activeTab.value === 'shows') return Shows
@@ -53,6 +59,7 @@ function reloadData() {
 
 function updateRelativeTime() {
     const diff = Math.floor((new Date() - lastUpdated.value) / 1000)
+
     if (diff < 60) {
         relativeTime.value = `${diff} ${props.seconds_ago}`
     } else {
@@ -62,7 +69,11 @@ function updateRelativeTime() {
 }
 
 let intervalId = null
+
 onMounted(() => {
+    if(props.shows && props.shows.length > 0) {
+        showsToggle = true;
+    }
     updateRelativeTime()
     intervalId = setInterval(updateRelativeTime, 1000)
 })
@@ -73,7 +84,17 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="park_detail space-bottom-lg">
+    <div class="park_detail">
+        <button class="park_detail--back glass-button bottomLeft" @click="goBack">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <button class="glass-button bottomRight" @click="reloadData">
+            <i class="fa-solid fa-arrow-rotate-right"></i>
+        </button>
+
+        <FavoriteButton :park-id="props.park.internal_id" :is-favorited="props.park.is_favorited" class="glass-button topRight" />
+
         <div class="park_detail--image">
             <img :src="`/storage/parks/${props.park.id}.jpg`" :alt="props.park.name"
                 onerror="this.onerror=null;this.src='/storage/parks/placeholder_square.png';" />
@@ -82,13 +103,14 @@ onUnmounted(() => {
         </div>
 
         <div class="park_detail--reload" @click="reloadData">
-            <span v-if="lastUpdated">{{ last_updated }}: {{ relativeTime }}</span>
-            <button><i class="fa-solid fa-arrow-rotate-right"></i></button>
+            <span v-if="lastUpdated">
+                {{ last_updated }}: {{ relativeTime }}
+            </span>
         </div>
 
         <div class="container">
             <Toggle :attractions_title="props.attractions_title" :shows_title="props.shows_title"
-                :map_title="props.map_title" v-model:activeTab="activeTab" />
+                :map_title="props.map_title" v-model:activeTab="activeTab" :showsToggle="showsToggle" />
 
             <component :is="currentComponent" v-bind="currentProps" />
         </div>

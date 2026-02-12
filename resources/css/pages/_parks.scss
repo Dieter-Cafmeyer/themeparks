@@ -21,6 +21,25 @@
         overflow: hidden;
         transition: all .3s ease;
         width: 100%;
+        position: relative;
+
+        &--favorite {
+            position: absolute;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border-radius: 200px;
+            z-index: 5;
+            border: none;
+            cursor: pointer;
+            background-color: variables.$bg-color;
+
+            &.active {
+                color: variables.$success-color;
+            }
+        }
 
         &:hover {
             transform: scale(1.02);
@@ -90,29 +109,23 @@
         &--reload {
             position: fixed;
             cursor: pointer;
-            right: 0;
-            top: 120px;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
             margin-top: 0;
-            padding: 0px 10px;
-            border-radius: 50px 0 0 50px;
+            padding: 5px 10px;
+            border-radius: 0 0 15px 15px;
             z-index: 10;
+            max-width: 90%;
+            white-space: nowrap;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: .8rem;
-            color: white;
-            background-color: rgba($color: variables.$primary-color, $alpha: .9);
-            background-blend-mode: multiply;
-
-            button {
-                width: 30px;
-                height: 30px;
-                border: none;
-                background-color: transparent;
-                color: white;
-                padding-top: 2px;
-                cursor: pointer;
-            }
+            color: variables.$primary-color;
+            background: rgba(#ffffff, 0.1);
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
         }
 
         &--image {
@@ -199,7 +212,7 @@
         transition: all .3s ease;
 
         &:hover {
-            transform: scale(1.02);
+            transform: scale(1.01);
         }
 
         &--badges {
@@ -237,9 +250,9 @@
         }
 
         &--content {
-            border-radius: 4px;
+            border-radius: 20px;
             padding: 20px;
-            width: calc(100% - 75px);
+            width: calc(100% - 80px);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -260,7 +273,7 @@
         }
 
         &--time {
-            border-radius: 4px;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
             font-family: effra, sans-serif;
@@ -339,6 +352,7 @@
     h2 {
         font-size: 1.4rem;
         letter-spacing: 0;
+        padding-right: 20px;
     }
 
     h4 {
@@ -489,14 +503,14 @@
     flex-wrap: wrap;
     gap: 15px;
 
-    > label {
+    >label {
         display: flex;
         justify-content: center;
         align-items: center;
         min-width: 120px;
         font-size: .8rem;
 
-        > span {
+        >span {
             margin-left: 5px;
         }
     }

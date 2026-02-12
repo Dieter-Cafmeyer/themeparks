@@ -7,15 +7,11 @@
                 </li>
                 
                 <li>
-                    <Link :href="route('admin.parks')"><i class="fas fa-toggle-off"></i> Parks</Link>
+                    <Link :href="route('admin.parks')"><img src="../../../../assets/coaster.svg" alt=""> Parks</Link>
                 </li>
 
                 <li>
                     <Link :href="route('dashboard.users')" v-if="$page.props.auth.user?.is_admin"><i class="fas fa-users"></i> Users</Link>
-                </li>
-
-                <li>
-                    <Link :href="route('logout')" method="post" as="button"><i class="fas fa-power-off"></i> Logout</Link>
                 </li>
             </ul>
         </nav>
