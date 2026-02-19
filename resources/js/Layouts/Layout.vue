@@ -1,12 +1,11 @@
 <script setup>
-import { ref, nextTick, onMounted } from 'vue'
+import { ref, nextTick, onMounted, watch } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 
-const { props: pageProps } = usePage()
-const t = (key) => pageProps.translations?.[key] ?? key
+const page = usePage()
+const t = (key) => page.props.translations?.[key] ?? key
 
 const navRef = ref(null)
-const activeKey = ref('parks')
 
 const indicatorStyle = ref({
     left: '0px',
@@ -14,12 +13,24 @@ const indicatorStyle = ref({
 })
 
 function isActive(key) {
-    return activeKey.value === key
-}
+    const url = page.url
 
-function setActive(key) {
-    activeKey.value = key
-    nextTick(updateIndicator)
+    switch (key) {
+        case 'parks':
+            return url === '/' || url.startsWith('/parks')
+
+        case 'favorites':
+            return url.startsWith('/favorites')
+
+        case 'dashboard':
+            return url.startsWith('/dashboard')
+
+        case 'login':
+            return url.startsWith('/login')
+
+        default:
+            return false
+    }
 }
 
 function updateIndicator() {
@@ -37,6 +48,11 @@ function updateIndicator() {
 
 onMounted(() => {
     nextTick(updateIndicator)
+    window.addEventListener('resize', updateIndicator)
+})
+
+watch(() => page.url, () => {
+    nextTick(updateIndicator)
 })
 </script>
 
@@ -48,35 +64,34 @@ onMounted(() => {
                 <ul>
                     <div class="nav_indicator" :style="indicatorStyle"></div>
 
-                    <li :class="{ active: isActive('parks') }" @click="setActive('parks')">
+                    <li :class="{ active: isActive('parks') }">
                         <Link :href="route('parks')">
-
                         <img src="../../assets/coaster.svg" alt="">
-                        <label>Parks</label>
+                        <label>{{ t('parks') }}</label>
                         </Link>
                     </li>
 
-                    <li :class="{ active: isActive('favorites') }" @click="setActive('favorites')">
+                    <li :class="{ active: isActive('favorites') }">
                         <Link :href="route('favorites')">
                         <i class="far fa-star"></i>
-                        <label>Favorites</label>
+                        <label>{{ t('favorites') }}</label>
                         </Link>
                     </li>
 
-                    <li v-if="!$page.props.auth.user" :class="{ active: isActive('login') }"
-                        @click="setActive('login')">
+                    <li v-if="!$page.props.auth.user" :class="{ active: isActive('login') }">
                         <Link :href="route('login')">
                         <i class="far fa-user"></i>
                         <label>Account</label>
                         </Link>
                     </li>
 
-                    <li v-else :class="{ active: isActive('dashboard') }" @click="setActive('dashboard')">
+                    <li v-else :class="{ active: isActive('dashboard') }">
                         <Link :href="route('dashboard')">
                         <i class="far fa-user"></i>
                         <label>Account</label>
                         </Link>
                     </li>
+
                 </ul>
             </nav>
         </div>

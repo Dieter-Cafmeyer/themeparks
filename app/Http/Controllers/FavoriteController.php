@@ -27,8 +27,7 @@ class FavoriteController extends Controller
         if (!$user) {
             return Inertia::render('Favorites/Index', [
                 'parks' => [],
-                'isGuest' => true,
-                'title' => 'Log in om favorieten te gebruiken',
+                'isGuest' => true
             ]);
         }
 
@@ -46,9 +45,7 @@ class FavoriteController extends Controller
 
         return Inertia::render('Favorites/Index', [
             'parks' => $parks,
-            'isGuest' => false,
-            'title' => 'Mijn favorieten',
-            'search_title' => __('messages.search_resort'),
+            'isGuest' => false
         ]);
     }
 }

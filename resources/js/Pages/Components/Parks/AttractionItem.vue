@@ -1,9 +1,11 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
+import axios from 'axios'
 
 const { props: pageProps } = usePage();
 const t = (key) => pageProps.translations?.[key] ?? key;
+const user = pageProps.auth.user
 
 const props = defineProps({
     attraction: Object
@@ -73,7 +75,7 @@ const availableFeatures = computed(() => {
         features.push({
             key: 'paid_return_available',
             class: 'badge_paid_return',
-             icon: 'fa-solid fa-ticket'
+            icon: 'fa-solid fa-ticket'
         })
     }
 
@@ -105,19 +107,40 @@ function formatDate(date) {
         hour12: false
     })
 }
+
+async function toggleFavorite(e) {
+    e.stopPropagation()
+
+    if (!user) return
+
+    try {
+        const response = await axios.post(
+            route('attractions.favorite', props.attraction.id)
+        )
+
+        props.attraction.is_favorited = response.data.is_favorited
+
+    } catch (error) {
+        console.error(error)
+    }
+}
 </script>
 
 <template>
     <!-- Item -->
     <div class="attractions_item" @click="tryOpenPopup">
         <div :class="statusClass + ' attractions_item--content'">
-            <h3>{{ attraction.name }}</h3>
+            <h3>
+                {{ attraction.name }}
+                <i v-if="user" :class="[attraction.is_favorited ? 'fas fa-star favorited' : 'far fa-star']"
+                    @click="toggleFavorite" />
+            </h3>
             <div class="attractions_item--badges" v-if="availableFeatures.length > 0">
                 <span v-for="feature in availableFeatures" :key="feature.key"
                     :class="'attraction_badge ' + feature.class">
                     <i :class="feature.icon"></i> {{ t(feature.key) }}
                 </span>
-            </div> 
+            </div>
         </div>
 
         <div :class="statusClass + ' attractions_item--time'">
@@ -155,16 +178,16 @@ function formatDate(date) {
 
             <h2>{{ attraction.name }}</h2>
 
-            <div class="popup_times"> 
+            <div class="popup_times">
                 <div v-if="standby">
                     <h4> {{ t('standby') }} </h4>
-                    <p>{{ standby.waitTime  ?? '0'  }}</p> 
+                    <p>{{ standby.waitTime ?? '0' }}</p>
                     <p>{{ t('minutes_short') }}</p>
                 </div>
 
                 <div v-if="singleRider">
                     <h4>{{ t('single_rider') }}</h4>
-                    <p>{{ singleRider.waitTime ?? '0'  }}</p> 
+                    <p>{{ singleRider.waitTime ?? '0' }}</p>
                     <p>{{ t('minutes_short') }}</p>
                 </div>
             </div>
@@ -186,7 +209,7 @@ function formatDate(date) {
                 </p>
             </div>
 
-            <div v-if="paidReturnTime"  class="popup_return">
+            <div v-if="paidReturnTime" class="popup_return">
                 <h4>{{ t('paid_return_available') }}</h4>
                 <p>
                     <i class="fas fa-circle-check"></i>
@@ -194,7 +217,7 @@ function formatDate(date) {
                 </p>
                 <p v-if="paidReturnTime.returnStart">
                     <i class="fa-regular fa-clock"></i>
-                     {{ formatDate(paidReturnTime.returnStart) }}
+                    {{ formatDate(paidReturnTime.returnStart) }}
                     {{ t('to') }} {{ formatDate(paidReturnTime.returnEnd) }}
                 </p>
                 <p v-if="paidReturnTime.price">

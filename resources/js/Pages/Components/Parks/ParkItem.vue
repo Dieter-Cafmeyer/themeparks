@@ -39,7 +39,7 @@ onMounted(async () => {
         <i class="fas fa-angle-right"></i> 
       </Link>
 
-      <FavoriteButton :park-id="park.id" :is-favorited="park.is_favorited" />
+      <FavoriteButton v-if="park.is_favorited != null" :park-id="park.id" :is-favorited="park.is_favorited" />
     </article>
 </template>
 

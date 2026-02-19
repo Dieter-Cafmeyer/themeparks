@@ -2,6 +2,7 @@
 import { useForm, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
+
 import DashboardLayout from '../../Layouts/Dashboard.vue'
 import Layout from '../../Layouts/Layout.vue'
 import LanguageSwitcher from '../Components/Form/LanguageSwitcher.vue';
@@ -14,6 +15,7 @@ defineOptions({
 
 const { props } = usePage();
 const user = JSON.parse(JSON.stringify(props.user));
+const t = (key) => props.translations?.[key] ?? key;
 
 const form = useForm({
   profile_picture: null,
@@ -22,32 +24,12 @@ const form = useForm({
   email: user.email || '',
   language: user.language || '',
   preview: '/storage/' + user.profile_picture || '',
-  tags: user.tags || [],
 });
 
 // Profile Picture
 const changePicture = (e) => {
   form.profile_picture = e.target.files[0];
   form.preview = URL.createObjectURL(e.target.files[0]);
-};
-
-
-// Tags
-const newTag = ref("");
-const addTag = (e) => {
-  if (!newTag.value.trim()) return;
-
-  const tag = newTag.value.trim();
-
-  if (!form.tags.includes(tag)) {
-    form.tags.push(tag);
-  }
-
-  newTag.value = "";
-};
-
-const removeTag = (tag) => {
-  form.tags = form.tags.filter(t => t !== tag);
 };
 
 
@@ -63,12 +45,7 @@ const updateAccount = () => {
 
 <template>
   <div class="dashboard-background">
-    <h3>My Account</h3>
-
-    <li>
-      <LanguageSwitcher />
-    </li>
-
+    <h3>{{ t('my_account') }}</h3>
 
     <form @submit.prevent="updateAccount">
       <div class="form-item upload-picture">
@@ -77,50 +54,35 @@ const updateAccount = () => {
         </div>
 
         <label class="upload-file" for="profile_picture">
-          <i class="fas fa-upload"></i> <span v-if="form.preview != '/storage/null'">Change your profile
-            picture</span><span v-else>Upload a profile picture</span>
+          <i class="fas fa-upload"></i> <span v-if="form.preview != '/storage/null'">{{ t('change_profile_picture') }}</span>
+          <span v-else>{{ t('upload_profile_picture') }}</span>
         </label>
         <input type="file" id="profile_picture" @change="changePicture" hidden>
         <small class="message-error" v-if="form.errors.profile_picture">{{ form.errors.profile_picture }}</small>
       </div>
 
-      <TextInput name="Name" v-model="form.name" :message="form.errors.name" />
-      <TextInput name="Firstname" v-model="form.firstname" :message="form.errors.firstname" />
-      <TextInput name="Email" type="email" v-model="form.email" :message="form.errors.email" />
+      <TextInput :name="t('name')" v-model="form.name" :message="form.errors.name" />
+      <TextInput :name="t('firstname')" v-model="form.firstname" :message="form.errors.firstname" />
+      <TextInput :name="t('email')" type="email" v-model="form.email" :message="form.errors.email" />
 
       <div class="form-item">
-        <label for="tags">Tags</label>
-
-        <div class="tags-wrapper">
-          <span class="tag-pill" v-for="tag in form.tags" :key="tag">
-            {{ tag }}
-            <button type="button" @click="removeTag(tag)" class="remove"><i class="fas fa-xmark"></i></button>
-          </span>
-        </div>
-
-        <div class="tags-add">
-          <input type="text" v-model="newTag" placeholder="Add a tag" class="tag-input" />
-          <button type="button" class="button" @click="addTag"><i class="fas fa-plus"></i></button>
-        </div>
-
-        <small class="message-error" v-if="form.errors.tags">
-          {{ form.errors.tags }}
-        </small>
+        <label for="language">{{ t('language') }}</label>
+        <LanguageSwitcher />
       </div>
 
       <div class="form-item">
-        <label for="language">Language</label>
+        <label for="language">{{ t('language') }}</label>
         <div class="select-wrapper">
           <select name="language" id="language" v-model="form.language">
-            <option value="nl">Dutch</option>
-            <option value="en">English</option>
-            <option value="fr">French</option>
+            <option value="nl">{{ t('dutch') }}</option>
+            <option value="en">{{ t('english') }}</option>
+            <option value="fr">{{ t('french') }}</option>
           </select>
         </div>
       </div>
 
       <div class="form-actions">
-        <button class="button" :disabled="form.processing"><i class="fas fa-save"></i> Save my account</button>
+        <button class="button" :disabled="form.processing"><i class="fas fa-save"></i> {{ t('save_my_account') }}</button>
       </div>
     </form>
   </div>

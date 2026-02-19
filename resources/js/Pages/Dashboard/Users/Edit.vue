@@ -69,11 +69,11 @@ const removeTag = (tag) => {
 
 <template class="user_edit">
   <div class="dashboard-background">
-    <Link class="user_edit-back" :href="route('dashboard.users')"><i class="fas fa-angle-left"></i> Back</Link>
+    <Link class="user_edit-back" :href="route('dashboard.users')"><i class="fas fa-angle-left"></i> {{ t('back') }}</Link>
 
     <div class="user_edit-header">
-      <h3>Edit user</h3>
-      <button class="button" @click="deleteUser"><i class="fas fa-trash"></i> Delete</button>
+      <h3>{{ t('edit_user') }}</h3>
+      <button class="button" @click="deleteUser"><i class="fas fa-trash"></i> {{ t('delete') }}</button>
     </div>
     <form class="user_edit-form" @submit.prevent="updateUser">
       <div class="form-item upload-picture">
@@ -83,8 +83,8 @@ const removeTag = (tag) => {
         </div>
 
         <label class="upload-file" for="profile_picture">
-          <i class="fas fa-upload"></i> <span v-if="form.preview != '/storage/null'">Change profile picture</span><span
-            v-else>Upload a profile picture</span>
+          <i class="fas fa-upload"></i> <span v-if="form.preview != '/storage/null'">{{ t('change_profile_picture') }}</span><span
+            v-else>{{ t('upload_profile_picture') }}</span>
         </label>
         <input type="file" id="profile_picture" @change="changePicture" hidden>
         <small class="message-error" v-if="form.errors.profile_picture">{{ form.errors.profile_picture }}</small>
@@ -95,32 +95,12 @@ const removeTag = (tag) => {
       <TextInput name="Email" type="email" v-model="form.email" :message="form.errors.email" />
 
       <div class="form-item">
-        <label for="tags">Tags</label>
-
-        <div class="tags-wrapper">
-          <span class="tag-pill" v-for="tag in form.tags" :key="tag">
-            {{ tag }}
-            <button type="button" @click="removeTag(tag)" class="remove"><i class="fas fa-xmark"></i></button>
-          </span>
-        </div>
-
-        <div class="tags-add">
-          <input type="text" v-model="newTag" placeholder="Add a tag" class="tag-input" />
-          <button type="button" class="button" @click="addTag"><i class="fas fa-plus"></i></button>
-        </div>
-
-        <small class="message-error" v-if="form.errors.tags">
-          {{ form.errors.tags }}
-        </small>
-      </div>
-
-      <div class="form-item">
-        <label for="language">Language</label>
+        <label for="language">{{ t('language') }}</label>
         <div class="select-wrapper">
           <select name="language" id="language" v-model="form.language">
-            <option value="nl">Dutch</option>
-            <option value="en">English</option>
-            <option value="fr">French</option>
+            <option value="nl">{{ t('dutch') }}</option>
+            <option value="en">{{ t('english') }}</option>
+            <option value="fr">{{ t('french') }}</option>
           </select>
         </div>
       </div>
@@ -131,7 +111,7 @@ const removeTag = (tag) => {
       </label>
 
       <div class="form-actions">
-        <button class="button" :disabled="form.processing"><i class="fas fa-save"></i> Save changes</button>
+        <button class="button" :disabled="form.processing"><i class="fas fa-save"></i> {{ t('save_changes') }}</button>
       </div>
     </form>
   </div>

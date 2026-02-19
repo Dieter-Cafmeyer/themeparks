@@ -15,25 +15,44 @@ const props = defineProps({
 const search = ref('');
 
 const filteredDestinations = computed(() => {
-    if (!search.value.trim()) {
+    const term = search.value.trim().toLowerCase()
+
+    if (!term) {
         return props.destinations
     }
 
-    const term = search.value.toLowerCase()
+    return props.destinations
+        .map(destination => {
+            const destinationMatches =
+                destination.name.toLowerCase().includes(term)
 
-    return props.destinations.filter(destination =>
-        destination.name.toLowerCase().includes(term)
-    )
-})
+            if (destinationMatches) {
+                return destination
+            }
+
+            const filteredParks = destination.parks.filter(park =>
+                park.name.toLowerCase().includes(term)
+            )
+
+            return {
+                ...destination,
+                parks: filteredParks,
+            }
+        })
+        .filter(destination =>
+            destination.name.toLowerCase().includes(term) ||
+            destination.parks.length > 0
+        )
+});
 </script>
 
 
 <template>
-    <Head :title="` | ${props.title}`" />
+    <Head :title="` | ${t('destinations')}`" />
 
     <div class="container">
 
-        <h1 class="space-top-md space-bottom-sm">{{ props.title }}</h1>
+        <h1 class="space-top-md space-bottom-sm">{{ t('destinations') }}</h1>
 
         <div class="search form-item">
             <input id="search" v-model="search" type="text" :placeholder="t('search_resort')" />

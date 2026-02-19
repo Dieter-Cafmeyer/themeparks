@@ -1,3 +1,5 @@
+@use '../variables';
+
 .register,
 .login {
     &-page {
@@ -12,7 +14,7 @@
         background-color: white;
         max-width: 800px;
         width: 100%;
-        border-radius: 10px;
+        border-radius: variables.$border-radius;
         padding: clamp(20px, 8vw, 80px);
 
         h1 {

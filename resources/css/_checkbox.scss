@@ -16,11 +16,25 @@
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: transparent;
   border-radius: 26px;
   transition: background-color 0.3s;
   border: 1px solid variables.$border-color;
+
+  .fa-star {
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    z-index: 5;
+    color: variables.$border-color;
+    font-size: .9rem;
+    transform: translateY(-50%);
+    transition: all .3s;
+  }
 }
 
 .slider::before {
@@ -36,16 +50,23 @@
   transition: transform 0.3s;
 }
 
+
 /* Checked state */
-input:checked + .slider {
-  background-color: variables.$primary-color; /* iOS blue */
+input:checked+.slider {
+  background-color: variables.$primary-color;
+  /* iOS blue */
+
+  .fa-star {
+    left: 27px;
+    z-index: 5;
+    color: variables.$primary-color;
+    font-weight: 700;
+  }
 }
 
-input:checked + .slider::before {
+input:checked+.slider::before {
   transform: translateX(24px);
 }
 
 /* Optional: focus styles */
-input:focus + .slider {
-
-}
+input:focus+.slider {}

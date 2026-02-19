@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3'
 
 import DashboardLayout from '../../../Layouts/Dashboard.vue'
 import Layout from '../../../Layouts/Layout.vue'
@@ -11,10 +11,11 @@ defineOptions({
 })
 
 const props = defineProps({
-    destinations: Array,
-    title: String,
-    search_title: String,
+    destinations: Array
 })
+
+const page = usePage()
+const t = (key) => page.props.translations?.[key] ?? key;
 
 const search = ref('')
 const missingImages = ref({})
@@ -24,7 +25,7 @@ function imageError(parkId) {
 }
 
 function toggleDestination(destination) {
-    router.put(route('admin.destinations.update', { destination: destination.id }), {
+    router.put(route('dashboard.destinations.update', { destination: destination.id }), {
         is_active: destination.is_active
     }, {
         preserveScroll: true,
@@ -32,7 +33,7 @@ function toggleDestination(destination) {
 }
 
 function togglePark(park) {
-    router.put(route('admin.parks.update', { park: park.id }), {
+    router.put(route('dashboard.parks.update', { park: park.id }), {
         is_active: park.is_active
     }, {
         preserveScroll: true,
@@ -53,10 +54,10 @@ const filteredDestinations = computed(() => {
 </script>
 
 <template>
-    <h2>{{ title }}</h2>
+    <h2>{{ t('manage_parks') }}</h2>
 
     <div class="search form-item">
-        <input id="search" v-model="search" type="text" :placeholder="search_title" />
+        <input id="search" v-model="search" type="text" :placeholder="t('search_resort')" />
         <i class="fas fa-magnifying-glass"></i>
     </div>
 

@@ -1,12 +1,17 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3'
 
 import Toggle from '../Components/Parks/Toggle.vue';
 import FavoriteButton from '../Components/Parks/FavoriteButton.vue';
+import OpeningHours from '../Components/Parks/OpeningHours.vue';
 import Attractions from '../Components/Parks/Attractions.vue';
 import Shows from '../Components/Parks/Shows.vue';
 import Map from '../Components/Parks/Map.vue';
+
+const page = usePage()
+const user = page.props.auth.user
+const t = (key) => page.props.translations?.[key] ?? key;
 
 const props = defineProps({
     park: Object,
@@ -14,16 +19,9 @@ const props = defineProps({
     map: Object,
     attractions: Object,
     title: String,
-    attractions_title: String,
-    shows_title: String,
-    map_title: String,
-    last_updated: String,
-    seconds_ago: String,
-    minute: String,
-    minutes: String,
-    ago: String,
 });
 
+const showOpeningHours = ref(false);
 const activeTab = ref('attractions');
 const lastUpdated = ref(new Date());
 const relativeTime = ref('');
@@ -61,17 +59,17 @@ function updateRelativeTime() {
     const diff = Math.floor((new Date() - lastUpdated.value) / 1000)
 
     if (diff < 60) {
-        relativeTime.value = `${diff} ${props.seconds_ago}`
+        relativeTime.value = `${diff} ${t('seconds_ago')}`
     } else {
         const minutes = Math.floor(diff / 60)
-        relativeTime.value = `${minutes} ${minutes === 1 ? props.minute : props.minutes} ${props.ago}`
+        relativeTime.value = `${minutes} ${minutes === 1 ? t('minute') : t('minutes')} ${t('ago')}`
     }
 }
 
 let intervalId = null
 
 onMounted(() => {
-    if(props.shows && props.shows.length > 0) {
+    if (props.shows && props.shows.length > 0) {
         showsToggle = true;
     }
     updateRelativeTime()
@@ -81,9 +79,16 @@ onMounted(() => {
 onUnmounted(() => {
     clearInterval(intervalId)
 })
+
+function toggleOpeningHours() {
+    showOpeningHours.value = !showOpeningHours.value
+}
+
 </script>
 
 <template>
+    <Head :title="` | ${title}`" />
+
     <div class="park_detail">
         <button class="park_detail--back glass-button bottomLeft" @click="goBack">
             <i class="fa-solid fa-arrow-left"></i>
@@ -93,7 +98,12 @@ onUnmounted(() => {
             <i class="fa-solid fa-arrow-rotate-right"></i>
         </button>
 
-        <FavoriteButton :park-id="props.park.internal_id" :is-favorited="props.park.is_favorited" class="glass-button topRight" />
+        <div class="glass-button park_detail--openinghours" @click="toggleOpeningHours">
+            <i class="far fa-clock"></i> {{ t('opening_hours') }}
+        </div>
+
+        <FavoriteButton v-if="user" :park-id="props.park.internal_id" :is-favorited="props.park.is_favorited"
+            class="glass-button topRight" />
 
         <div class="park_detail--image">
             <img :src="`/storage/parks/${props.park.id}.jpg`" :alt="props.park.name"
@@ -104,13 +114,15 @@ onUnmounted(() => {
 
         <div class="park_detail--reload" @click="reloadData">
             <span v-if="lastUpdated">
-                {{ last_updated }}: {{ relativeTime }}
+                {{ t('last_updated') }}: {{ relativeTime }}
             </span>
         </div>
 
         <div class="container">
-            <Toggle :attractions_title="props.attractions_title" :shows_title="props.shows_title"
-                :map_title="props.map_title" v-model:activeTab="activeTab" :showsToggle="showsToggle" />
+            <OpeningHours v-if="showOpeningHours" :park="props.park" @close="showOpeningHours = false" />
+
+            <Toggle :attractions_title="t('attractions_title')" :shows_title="t('shows_title')"
+                :map_title="t('map_title')" v-model:activeTab="activeTab" :showsToggle="showsToggle" />
 
             <component :is="currentComponent" v-bind="currentProps" />
         </div>

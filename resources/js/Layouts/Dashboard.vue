@@ -23,7 +23,7 @@ const isActive = (path) => page.url.startsWith(path);
             <div class="dashboard-wrapper">
                 <SideBar />
 
-                <section>
+                <section class="space-top-md">
                     <slot />
                 </section>
             </div>

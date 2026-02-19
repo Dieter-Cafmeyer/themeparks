@@ -30,35 +30,34 @@ const filteredParks = computed(() => {
 </script>
 
 <template>
-    <Head :title="` | ${props.title}`" />
+    <Head :title="` | ${t('favorites')}`" />
 
     <div class="container">
         <div class="favorites-page">
-            <h1 class="space-top-md space-bottom-sm">{{ props.title }}</h1>
+            <h1 class="space-top-md space-bottom-md">{{ t('favorites') }}</h1>
 
-            <div class="search form-item">
+            <div  v-if="!isGuest && parks.length > 0" class="search form-item">
                 <input id="search" v-model="search" type="text" :placeholder="t('search_resort')" />
                 <i class="fas fa-magnifying-glass"></i>
             </div>
 
-
             <!-- Guest view -->
-            <div v-if="isGuest" class="bg-gray-100 p-6 rounded">
-            <p class="mb-4">
-                Je bent niet ingelogd.
-            </p>
-
-            <Link 
-                :href="route('register')" 
-                class="text-blue-600 underline"
-            >
-                Maak een account om parken toe te voegen aan je favorieten.
-            </Link>
+            <div class="favorites-page__empty-wrapper" v-if="isGuest">
+                <div class="favorites-page__empty space-top-md">
+                    <h2>{{ t('not_logged_in') }}</h2>
+                    <p><Link :href="route('login')">{{ t('log_in') }}</Link> 
+                    {{ t('or') }} 
+                    <Link :href="route('register')">{{ t('create_account') }}</Link> 
+                    {{ t('to_add_favorites') }}</p>
+                </div>
             </div>
 
             <!-- Logged in but no favorites -->
-            <div v-else-if="parks.length === 0">
-            <p>Je hebt nog geen favoriete parken toegevoegd.</p>
+            <div class="favorites-page__empty-wrapper" v-else-if="parks.length === 0">
+                <div class="favorites-page__empty space-top-md">
+                    <h2 class="space-bottom-md">{{t('no_favorites')}}</h2>
+                    <Link class="button" :href="route('parks')">{{ t('browse_parks') }}</Link>
+                </div>
             </div>
 
             <!-- Favorites list -->
