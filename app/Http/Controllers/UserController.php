@@ -20,8 +20,10 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        $user->load('favoriteParks');
+
         return Inertia::render('Dashboard/Users/Edit', [
-            'user' => $user
+            'user' => $user->toArray(),
         ]);
     }
 
@@ -32,11 +34,8 @@ class UserController extends Controller
             'name' => ['required', 'max:255'],
             'firstname' => ['required', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'language' => ['required'],
-            'tags' => ['nullable'],
+            'is_admin' => ['boolean'],
         ]);
-
-        
 
         if($request->hasFile('profile_picture')) {
             if ($user->profile_picture) {

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import fs from 'fs'
 
 
 export default defineConfig({
@@ -12,10 +13,17 @@ export default defineConfig({
         }),
     ],
     server: {
-        host: '0.0.0.0', // belangrijk voor container
-        hmr: {
-            host: 'themeparks.test', // browser kan dit bereiken
-            protocol: 'ws'
+        host: 'themeparks.test',
+        https: {
+            key: fs.readFileSync(
+                '/Users/dieter.cafmeyer/.config/valet/Certificates/themeparks.test.key'
+            ),
+            cert: fs.readFileSync(
+                '/Users/dieter.cafmeyer/.config/valet/Certificates/themeparks.test.crt'
+            ),
         },
+        hmr: {
+            host: 'themeparks.test',
+        }
     },
 });

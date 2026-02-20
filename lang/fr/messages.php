@@ -78,4 +78,5 @@ return [
     'edit_user' => 'Modifier l\'utilisateur',
     'delete' => 'Supprimer',
     'back' => 'Retour',
+    'new_password' => 'Nouveau mot de passe',
 ];

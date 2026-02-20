@@ -78,4 +78,5 @@ return [
     'edit_user' => 'Bewerk gebruiker',
     'delete' => 'Verwijderen',
     'back' => 'Terug',
+    'new_password' => 'Nieuw wachtwoord',
 ];

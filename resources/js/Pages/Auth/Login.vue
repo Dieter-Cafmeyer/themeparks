@@ -1,6 +1,8 @@
 <script setup>
 import { useForm, usePage } from '@inertiajs/vue3';
 import TextInput from '../Components/Form/TextInput.vue';
+import LanguageSwitcher from '../Components/Form/LanguageSwitcher.vue';
+
 
 const { props: pageProps } = usePage();
 const t = (key) => pageProps.translations?.[key] ?? key;
@@ -21,9 +23,11 @@ const submit = () => {
     <Head :title="` | ${t('login')}`" />
 
     <div class="login-page">
+        <LanguageSwitcher />
+
+
         <div class="login-form">
             <h1>{{ t('login') }}</h1>
-
             <form @submit.prevent="submit">
                 <TextInput :name="t('email')" type="email" v-model="form.email" :message="form.errors.email" />
                 <TextInput :name="t('password')" type="password" v-model="form.password" :message="form.errors.password" />

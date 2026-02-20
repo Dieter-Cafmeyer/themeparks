@@ -34,10 +34,4 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
-    'jobtoolz' => [
-        'key' => env('JOBTOOLZ_API_KEY'),
-        'base_url' => env('JOBTOOLZ_BASE_URL'),
-    ],
-
 ];

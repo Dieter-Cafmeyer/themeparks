@@ -1,29 +1,30 @@
 <script setup>
 import { useForm, usePage, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
 
 import DashboardLayout from '../../../Layouts/Dashboard.vue';
 import Layout from '../../../Layouts/Layout.vue';
-
 import TextInput from '../../Components/Form/TextInput.vue';
+import SwitchToggle from '../../Components/Form/SwitchToggle.vue'
+import ParkItem from '../../Components/Parks/ParkItem.vue';
 
 // Layout
 defineOptions({
   layout: [Layout, DashboardLayout]
 });
 
+const { props: pageProps } = usePage();
+const t = (key) => pageProps.translations?.[key] ?? key;
+
 // User update logics
-const user = usePage().props.user;
+const user = pageProps.user;
 
 const form = useForm({
   profile_picture: null,
   name: user.name || '',
-  firstname: user.firstname || '',
   email: user.email || '',
   language: user.language || '',
-  is_admin: null,
+  is_admin: user.is_admin || false,
   preview: '/storage/' + user.profile_picture || '',
-  tags: user.tags || [],
 });
 
 const updateUser = () => {
@@ -47,35 +48,17 @@ const changePicture = (e) => {
   form.preview = URL.createObjectURL(e.target.files[0]);
 };
 
-// Tags
-const newTag = ref("");
-const addTag = (e) => {
-  if (!newTag.value.trim()) return;
-
-  const tag = newTag.value.trim();
-
-  if (!form.tags.includes(tag)) {
-    form.tags.push(tag);
-  }
-
-  newTag.value = "";
-};
-
-const removeTag = (tag) => {
-  form.tags = form.tags.filter(t => t !== tag);
-};
-
 </script>
 
 <template class="user_edit">
-  <div class="dashboard-background">
-    <Link class="user_edit-back" :href="route('dashboard.users')"><i class="fas fa-angle-left"></i> {{ t('back') }}</Link>
 
+  <div class="dashboard-background">
     <div class="user_edit-header">
-      <h3>{{ t('edit_user') }}</h3>
+      <Link class="button" :href="route('dashboard.users')"><i class="fas fa-angle-left"></i> {{ t('back') }}</Link>
       <button class="button" @click="deleteUser"><i class="fas fa-trash"></i> {{ t('delete') }}</button>
     </div>
     <form class="user_edit-form" @submit.prevent="updateUser">
+      <h2 class="space-top-md" style="text-align: center;width: 100%;">{{ user.name }}</h2>
       <div class="form-item upload-picture">
 
         <div class="preview" v-if="form.preview != '/storage/null'">
@@ -90,23 +73,11 @@ const removeTag = (tag) => {
         <small class="message-error" v-if="form.errors.profile_picture">{{ form.errors.profile_picture }}</small>
       </div>
 
-      <TextInput name="Name" v-model="form.name" :message="form.errors.name" />
-      <TextInput name="Firstname" v-model="form.firstname" :message="form.errors.firstname" />
-      <TextInput name="Email" type="email" v-model="form.email" :message="form.errors.email" />
-
-      <div class="form-item">
-        <label for="language">{{ t('language') }}</label>
-        <div class="select-wrapper">
-          <select name="language" id="language" v-model="form.language">
-            <option value="nl">{{ t('dutch') }}</option>
-            <option value="en">{{ t('english') }}</option>
-            <option value="fr">{{ t('french') }}</option>
-          </select>
-        </div>
-      </div>
+      <TextInput :name="t('name')" v-model="form.name" :message="form.errors.name" />
+      <TextInput :name="t('email')" type="email" v-model="form.email" :message="form.errors.email" />
 
       <label class="checkbox-wrapper">
-        <input type="checkbox" v-model="form.is_admin" :checked="form.is_admin">
+        <SwitchToggle v-model="form.is_admin" />
         Admin
       </label>
 
@@ -114,5 +85,10 @@ const removeTag = (tag) => {
         <button class="button" :disabled="form.processing"><i class="fas fa-save"></i> {{ t('save_changes') }}</button>
       </div>
     </form>
+  </div>
+
+  <div class="park_overview space-bottom-md">
+    <h3 v-if="user.favorite_parks.length > 0" class="space-top-md space-bottom-md">{{ t('favorites') }}</h3>
+    <ParkItem v-for="park in user.favorite_parks" :key="park.id" :park="park" />
   </div>
 </template>

@@ -39,7 +39,7 @@ const currentComponent = computed(() => {
 
 const currentProps = computed(() => {
     if (activeTab.value === 'shows') return { shows: props.shows }
-    if (activeTab.value === 'map') return { map: props.map }
+    if (activeTab.value === 'map') return { map: props.map, park: props.park, attractions: props.attractions }
     return { attractions: props.attractions }
 })
 

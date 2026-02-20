@@ -14,9 +14,7 @@ class FavoriteController extends Controller
     public function toggle(Park $park)
     {
         $user = auth()->user();
-
         $user->favoriteParks()->toggle($park->id);
-
         return back();
     }
     
@@ -31,8 +29,7 @@ class FavoriteController extends Controller
             ]);
         }
 
-        $parks = $user->favoriteParks()
-            ->orderBy('name')
+        $parks = $user->favoriteParks()->orderBy('name')
             ->get([
                 'parks.id',
                 'parks.name',

@@ -126,7 +126,10 @@
         position: relative;
 
         .container {
+            position: relative;
             padding: 0 10px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         &--openinghours {
@@ -257,7 +260,7 @@
         justify-content: space-between;
         position: relative;
         width: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         min-height: 90px;
         cursor: pointer;
         transition: all .3s ease;
@@ -303,7 +306,7 @@
         &--content {
             border-radius: 20px;
             padding: 20px;
-            width: calc(100% - 80px);
+            width: calc(100% - 75px);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -364,35 +367,6 @@
                     font-size: .8rem;
                 }
             }
-        }
-
-        .open {
-            background-color: #27ae60;
-        }
-
-        .openModerate {
-            background-color: #e67e22;
-        }
-
-        .openBusy {
-            background-color: #f39c12;
-        }
-
-        .openVeryBusy {
-            background-color: #d35400;
-        }
-
-        .openSuperBusy {
-            background-color: #c03b2b;
-        }
-
-        .closed {
-            background-color: #95a5a6;
-        }
-
-        .down {
-            background-color: #e74c3c;
-            border-top: none !important;
         }
     }
 }
@@ -546,33 +520,6 @@
                 padding-bottom: 2px;
                 margin-left: 5px;
             }
-        }
-    }
-}
-
-
-#map {
-    height: 80vh;
-    width: 100%;
-    border-radius: 8px;
-}
-
-.map-filters {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-
-    >label {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-width: 120px;
-        font-size: .8rem;
-
-        >span {
-            margin-left: 5px;
         }
     }
 }

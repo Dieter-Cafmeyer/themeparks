@@ -11,9 +11,7 @@ class AttractionController extends Controller
     {
         $user = auth()->user();
 
-        $favorite = UserFavoriteAttraction::where('user_id', $user->id)
-            ->where('attraction_id', $attractionId)
-            ->first();
+        $favorite = UserFavoriteAttraction::where('user_id', $user->id)->where('attraction_id', $attractionId)->first();
 
         if ($favorite) {
             $favorite->delete();

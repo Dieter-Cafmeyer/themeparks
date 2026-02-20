@@ -5,7 +5,16 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 20px 0;
+        gap: 10px;
         width: 100%;
+
+        >div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
 
         &--logout {
             color: variables.$primary-color;
@@ -28,43 +37,27 @@
         flex-wrap: wrap;
 
         aside {
-            width: 270px;
             background-color: white;
             padding: 20px;
-            border-radius: 10px;
-
-            @media screen and (max-width: 950px) {
-                width: 100%;
-                padding: 5px;
-                background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) 100%);
-                backdrop-filter: blur(8px) saturate(160%);
-                -webkit-backdrop-filter: blur(8px) saturate(160%);
-                border-radius: 999px;
-                position: sticky;
-                top: 20px;
-                z-index: 20;
-                border-top: 1px solid rgba(255, 255, 255, 0);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-                box-shadow: 0 5px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(255, 255, 255, 0.15);
-
-            }
+            border-radius: 30px;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 5px;
+            position: relative;
+            z-index: 20;
+            margin-bottom: 20px;
 
             ul {
                 list-style-type: none;
-
-                @media screen and (max-width: 950px) {
-                    display: flex;
-                    justify-content: center;
-                }
+                display: flex;
+                justify-content: center;
 
                 li {
-                    margin: 1rem 0;
+                    flex: 1 1;
+                    margin: 0;
+                    padding-top: 10px;
 
-                    @media screen and (max-width: 950px) {
-                        flex: 1 1;
-                        margin: 0;
-                        padding-top: 10px;
-                    }
 
                     a,
                     button {
@@ -87,41 +80,29 @@
 
                     a {
                         display: flex;
-                        justify-content: flex-start;
+                        flex-direction: column;
+                        justify-content: center;
                         align-items: center;
-
-                        @media screen and (max-width: 950px) {
-                            flex-direction: column;
-                            justify-content: center;
-                            align-items: center;
-                        }
                     }
 
                     i {
-                        margin-right: 10px;
                         width: 25px;
                         color: variables.$secondary-color;
-
-                        @media screen and (max-width: 950px) {
-                            margin-right: 0;
-                        }
                     }
 
                     img {
                         width: 20px;
                         margin-left: 3px;
-                        margin-right: 12px;
-
-                        @media screen and (max-width: 950px) {
-                            margin-right: 0;
-                        }
+                        margin-right: 0;
                     }
                 }
             }
         }
 
         section {
-            width: calc(100% - 300px);
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
 
             @media screen and (max-width: 950px) {
                 width: 100%;
@@ -131,6 +112,7 @@
                 background-color: white;
                 padding: 20px;
                 border-radius: 20px;
+                margin-bottom: 20px;
             }
         }
     }

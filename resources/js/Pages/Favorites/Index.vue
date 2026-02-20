@@ -60,6 +60,11 @@ const filteredParks = computed(() => {
                 </div>
             </div>
 
+            <!-- Logged in with favorites, but filtered without results -->
+            <div v-else-if="parks.length > 0 && filteredParks.length === 0">
+               <p>Geen resultaten gevonden, voeg <Link :href="route('parks')">{{ t('parks') }}</Link> toe of pas je zoekopdracht aan.</p>
+            </div>
+
             <!-- Favorites list -->
             <div v-else class="park_overview space-bottom-md">
                 <ParkItem v-for="park in filteredParks" :key="park.id" :park="park" />

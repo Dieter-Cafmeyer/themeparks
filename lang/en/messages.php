@@ -78,4 +78,5 @@ return [
     'edit_user' => 'Edit user',
     'delete' => 'Delete',
     'back' => 'Back',
+    'new_password' => 'New password',
 ];

@@ -75,6 +75,10 @@ const groupedAttractions = computed(() => {
 
     return groups
 })
+
+const hasFavorites = computed(() => {
+    return attractionsArray.value.some(a => a.is_favorited)
+})
 </script>
 
 <template>
@@ -86,7 +90,7 @@ const groupedAttractions = computed(() => {
             </div>
         </div>
 
-        <div class="attractions_favorites-toggle">
+        <div v-if="hasFavorites" class="attractions_favorites-toggle">
             <label>
                 <SwitchToggle v-model="showFavoritesOnly" :star="true" />
             </label>

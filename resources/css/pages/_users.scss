@@ -167,11 +167,12 @@
         }
 
         &--image {
-            min-width: 75px;
-            height: 75px;
+            min-width: 60px;
+            height: 60px;
             border-radius: 200px;
             overflow: hidden;
             margin-right: 15px;
+            border: 1px solid variables.$border-color;
 
             img {
                 width: 100%;

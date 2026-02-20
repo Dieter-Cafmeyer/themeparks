@@ -16,7 +16,6 @@ class AuthController extends Controller
     {
         $fields = $request->validate([
             'name' => ['required', 'max:255'],
-            'firstname' => ['required', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed']
         ]);
@@ -61,10 +60,8 @@ class AuthController extends Controller
         $fields = $request->validate([
             'profile_picture' => ['file', 'nullable', 'max:1000'],
             'name' => ['required', 'max:255'],
-            'firstname' => ['required', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($request->user()->id)],
-            'language' => ['required'],
-            'tags' => ['nullable'],
+            'password' => ['nullable', 'confirmed'],
         ]);
 
         if($request->hasFile('profile_picture')) {

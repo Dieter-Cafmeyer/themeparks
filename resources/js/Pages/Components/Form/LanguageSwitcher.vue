@@ -1,26 +1,34 @@
 <script setup>
-import { usePage } from '@inertiajs/vue3';
-import "flag-icons/css/flag-icons.min.css";
+import { usePage } from '@inertiajs/vue3'
+import { ref, watch } from 'vue'
+import "flag-icons/css/flag-icons.min.css"
 
-const props = usePage().props;
-const locale = props.locale;
-const t = (key) => props.translations?.[key] ?? key;
+const page = usePage()
+
+const locale = ref(page.props.locale)
+
+const t = (key) => page.props.translations?.[key] ?? key
 
 const languages = [
-  { code: 'en', label: t('english'), flag: 'gb' },
-  { code: 'nl', label: t('dutch'), flag: 'nl' },
-  { code: 'fr', label: t('french'), flag: 'fr' },
-];
+  { code: 'en', label: 'English', flag: 'gb' },
+  { code: 'nl', label: 'Nederlands', flag: 'nl' },
+  { code: 'fr', label: 'Français', flag: 'fr' },
+]
 
+watch(
+  () => page.props.locale,
+  (newLocale) => {
+    locale.value = newLocale
+  }
+)
 </script>
 
 <template>
   <div class="language-switcher">
-    <div class="language-switcher__active">
+    <div class="language-switcher__active glass-button">
       <div>
-        <i class="fa-solid fa-globe"></i> {{ usePage().props.locale }} 
+        <i class="fas fa-globe"></i>
       </div>
-      <i class="fa-solid fa-angle-down"></i> 
     </div>
     <div class="language-switcher__dropdown">
         <Link v-for="lang in languages" :key="lang.code" :class="{ active: locale === lang.code }" :href="route('lang.switch', lang.code)">    
