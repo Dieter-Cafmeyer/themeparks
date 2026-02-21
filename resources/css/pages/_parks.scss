@@ -1,12 +1,26 @@
 @use '../variables';
 
 .park {
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 100%;
+    }
+
+    &_search {
+        margin-top: 0 !important;
+    }
+
     &_overview {
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 10px;
-
+        width: 100%;
+        
         &--title {
             text-transform: uppercase;
             font-size: .9rem;
@@ -725,5 +739,34 @@
                 }
             }
         }
+    }
+}
+
+.parks-map {
+    height: calc(100vh - 160px);
+    border-radius: 12px;
+    overflow: hidden;
+
+    .button {
+        text-align: center;
+    }
+}
+
+.view-toggle {
+    display: flex;
+    border-radius: 20px;
+    border: variables.$primary-color 1px solid;
+    overflow: hidden;
+
+    button {
+        border: none;
+        padding: 10px 15px;
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    button.active {
+        color: #fff;
+        background-color: variables.$primary-color;
     }
 }

@@ -43,7 +43,8 @@ const groupedAttractions = computed(() => {
     const groups = {
         OPERATING: [],
         DOWN: [],
-        CLOSED: []
+        CLOSED: [],
+        REFURBISHMENT: [],
     }
 
     filteredAttractions.value.forEach(attraction => {

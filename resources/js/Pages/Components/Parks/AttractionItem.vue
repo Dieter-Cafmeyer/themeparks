@@ -39,6 +39,10 @@ const statusClass = computed(() => {
         return 'down'
     }
 
+    if(el.status === 'REFURBISHMENT') {
+        return 'refurbishment'
+    }
+
     if (el.status === 'OPERATING') {
         const waitTime = el.queue?.STANDBY?.waitTime ?? 0
 
@@ -157,10 +161,15 @@ async function toggleFavorite(e) {
                     <i style="font-size: 1.2rem;" class="fas fa-circle-check"></i>
                 </div>
             </div>
-
+            
             <div v-else-if="attraction.status === 'CLOSED'">
                 <i class="fa-solid fa-lock"></i>
                 <p class="specialstate">closed</p>
+            </div>
+
+            <div v-else-if="attraction.status === 'REFURBISHMENT'">
+                <i class="fa-solid fa-person-digging"></i>
+                <p class="specialstate">refurb</p>
             </div>
 
             <div v-else>

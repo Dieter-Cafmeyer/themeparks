@@ -28,6 +28,9 @@ const props = defineProps({
   },
   park: {
     type: Object,
+  },
+  shows: {
+    type: Object,
   }
 })
 
@@ -96,13 +99,13 @@ onMounted(async () => {
 
   const geolocate = new maplibregl.GeolocateControl({
     positionOptions: { enableHighAccuracy: true },
-    trackUserLocation: true, // blauwe bol volgt je
-    showUserHeading: true,   // kompas richting
-    showAccuracyCircle: true // optioneel, cirkel rond locatie
+    trackUserLocation: true,
+    showUserHeading: true,
+    showAccuracyCircle: true
   })
   map.addControl(geolocate)
 
-  
+
   addMarkers()
 })
 
@@ -110,9 +113,6 @@ onMounted(async () => {
 watch(filteredChildren, () => {
   clearMarkers()
   addMarkers()
-
-  const center = getCenter()
-  map.setCenter([center[1], center[0]])
 }, { deep: true })
 
 function createMarkerElement(entityType, attraction = null) {
@@ -124,12 +124,16 @@ function createMarkerElement(entityType, attraction = null) {
       if (attraction) {
         let status = statusClass(attraction);
 
+        if (!status) status = 'closed'
         el.classList.add('marker-attraction')
         el.classList.add(status)
+
         if (status === 'closed') {
           el.innerHTML = `<i class="fas fa-lock"></i>`
         } else if (status === 'down') {
           el.innerHTML = `<i class="fas fa-triangle-exclamation"></i>`
+        } else if (status === 'refurbishment') {
+          el.innerHTML = `<i class="fas fa-person-digging"></i>`
         } else {
           el.innerHTML = `${attraction ? `<span class="wait-time">${attraction.queue?.STANDBY?.waitTime ?? 0}</span>min` : ''}`
         }
@@ -158,6 +162,10 @@ function statusClass(attraction) {
     return 'closed'
   }
 
+  if (attraction.status === 'REFURBISHMENT') {
+    return 'refurbishment'
+  }
+
   if (attraction.status === 'DOWN') {
     return 'down'
   }
@@ -183,30 +191,56 @@ const attractionMap = computed(() => {
   )
 })
 
+const showMap = computed(() => {
+  if (!props.shows) return {}
+
+  return Object.fromEntries(
+    Object.values(props.shows).map(a => [a.id, a])
+  )
+})
+
 function addMarkers() {
   filteredChildren.value.forEach(a => {
     if (a.location.latitude && a.location.longitude) {
-
       const attraction = attractionMap.value[a.id];
+      let html = `<h4>${a.name}</h4>`;
+
+      if (a.entityType === "ATTRACTION") {
+        if (attraction?.status && attraction.status !== 'OPERATING') {
+          html += `<strong>${t('status')}</strong><p>${t(attraction.status.toLowerCase())}</p>`;
+        }
+        if (attraction?.queue?.STANDBY?.waitTime) {
+          html += `<strong>${t('standby')}</strong><p>${attraction.queue?.STANDBY?.waitTime ?? 0} min</p>`;
+        }
+        if (attraction?.queue?.SINGLE_RIDER) {
+          html += `<strong>${t('single_rider')}</strong><p>${attraction.queue?.SINGLE_RIDER?.waitTime ?? '0'}</p>`;
+        }
+      } else if (a.entityType === "SHOW") {
+        const show = showMap.value[a.id];
+        if (show?.showtimes?.length) {
+          const now = new Date()
+          const nextShow = show.showtimes
+            .map(s => new Date(s.startTime))
+            .filter(date => date > now)
+            .sort((a, b) => a - b)[0]
+
+          if (nextShow) {
+            html += `<br><strong>${t('next_show')}</strong>
+            <p><i class="far fa-clock"></i>${nextShow.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</p>`
+          }
+          if (!nextShow) {
+            html += `<strong>${t('next_show')}</strong><p>${t('no_more_shows_today')}</p>`
+          }
+        }
+
+      } else {
+
+      }
+
       const el = createMarkerElement(a.entityType, attraction)
       const marker = new maplibregl.Marker({ element: el }).setLngLat([a.location.longitude, a.location.latitude])
 
-      if (a.entityType === "ATTRACTION") {
-        marker.setPopup(
-          new maplibregl.Popup({ offset: 25 }).setHTML(`
-              <h4>${a.name}</h4><br>
-              <strong>${t('wait_time')}:</strong> ${attraction?.queue?.STANDBY?.waitTime ?? 0} min<br>
-            `)
-        )
-
-      } else {
-        marker.setPopup(
-          new maplibregl.Popup({ offset: 25 }).setHTML(`
-              <h4>${a.name}</h4><br>
-            `)
-        )
-      }
-
+      marker.setPopup(new maplibregl.Popup({ offset: 25 }).setHTML(`${html}`))
       marker.addTo(map)
       markers.push(marker)
     }

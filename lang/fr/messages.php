@@ -79,4 +79,6 @@ return [
     'delete' => 'Supprimer',
     'back' => 'Retour',
     'new_password' => 'Nouveau mot de passe',
+    'visit_park' => 'Visiter le parc',
+    'next_show' => 'Prochain spectacle',
 ];

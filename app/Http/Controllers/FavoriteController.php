@@ -33,6 +33,8 @@ class FavoriteController extends Controller
             ->get([
                 'parks.id',
                 'parks.name',
+                'parks.latitude',
+                'parks.longitude',
                 'parks.api_id',
             ])
             ->map(function ($park) {

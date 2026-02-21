@@ -43,11 +43,16 @@ class ImportThemeParksJob implements ShouldQueue
                 $importedDestinationIds[] = $destination['id'];
 
                 foreach ($destination['parks'] as $entity) {
+                    $park = $api->park($entity['id']);
+
+
                     Park::updateOrCreate(
                         ['api_id' => $entity['id']],
                         [
                             'name' => $entity['name'],
                             'destination_id' => $destinationModel->id,
+                            'latitude' => $park['location']['latitude'] ?? null,
+                            'longitude' => $park['location']['longitude'] ?? null,
                             'is_active' => false,
                         ]
                     );

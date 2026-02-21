@@ -1,13 +1,16 @@
 @use '../variables';
 
 .favorites-page {
-    min-height: calc(100svh - 100px);
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: column;
 
     .park_overview {
+        width: 100%;
+    }
+
+    &_list {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
         width: 100%;
     }
 

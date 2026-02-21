@@ -7,13 +7,13 @@ const props = defineProps({
   park: Object
 });
 
-const imageUrl = ref('/storage/parks/placeholder-square.jpg');
+const imageUrl = ref('/storage/parks/placeholder_square.png');
 
 onMounted(async () => {
   try {
-    const res = await fetch(`/storage/parks/${props.park.api_id}.jpg`, { method: 'HEAD' })
+    const res = await fetch(`/storage/parks/square/${props.park.api_id}_cropped.jpg`, { method: 'HEAD' })
     if (res.ok) {
-      imageUrl.value = `/storage/parks/${props.park.api_id}.jpg`
+      imageUrl.value = `/storage/parks/square/${props.park.api_id}_cropped.jpg`
     }
   } catch (e) {
     console.error('Error checking image:', e)

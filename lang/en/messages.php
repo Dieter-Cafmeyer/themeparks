@@ -79,4 +79,6 @@ return [
     'delete' => 'Delete',
     'back' => 'Back',
     'new_password' => 'New password',
+    'visit_park' => 'Visit park',
+    'next_show' => 'Next show',
 ];

@@ -11,6 +11,8 @@ class Park extends Model
         'api_id',
         'name',
         'destination_id',
+        'latitude',
+        'longitude',
         'is_active',
     ];
 
