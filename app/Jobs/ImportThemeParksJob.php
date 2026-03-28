@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ImportThemeParksJob implements ShouldQueue
 {
@@ -45,11 +46,22 @@ class ImportThemeParksJob implements ShouldQueue
                 foreach ($destination['parks'] as $entity) {
                     $park = $api->park($entity['id']);
 
+                    // Generate a unique slug
+                    $baseSlug = Str::slug($entity['name']);
+                    $slug = $baseSlug;
+                    $counter = 1;
+
+                    // Check if slug exists and make it unique if necessary
+                    while (Park::where('slug', $slug)->where('api_id', '!=', $entity['id'])->exists()) {
+                        $slug = $baseSlug . '-' . $counter;
+                        $counter++;
+                    }
 
                     Park::updateOrCreate(
                         ['api_id' => $entity['id']],
                         [
                             'name' => $entity['name'],
+                            'slug' => $slug,
                             'destination_id' => $destinationModel->id,
                             'latitude' => $park['location']['latitude'] ?? null,
                             'longitude' => $park['location']['longitude'] ?? null,

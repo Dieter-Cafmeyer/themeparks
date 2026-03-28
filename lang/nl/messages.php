@@ -81,4 +81,5 @@ return [
     'new_password' => 'Nieuw wachtwoord',
     'visit_park' => 'Bezoek het park',
     'next_show' => 'Volgende show',
+    'no_more_shows_today' => 'Geen shows meer vandaag',
 ];

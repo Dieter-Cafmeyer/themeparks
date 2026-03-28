@@ -96,8 +96,12 @@ class ParkOverviewController extends Controller
         return back()->with('success', __('messages.park_updated'));
     }
 
-    public function detail(string $id, ThemeParksApi $api)
+    public function detail(string $slug, ThemeParksApi $api)
     {
+        // Find the park by slug to get the api_id
+        $localPark = Park::where('slug', $slug)->firstOrFail();
+        $id = $localPark->api_id;
+        
         $park = $api->park($id);
         $map = $api->children($id);
         $live = $api->attractions($id);
@@ -113,16 +117,13 @@ class ParkOverviewController extends Controller
 
         $user = auth()->user();
         $isFavorited = false;
-        $localPark = Park::where('api_id', $id)->first();
 
         $favorites = [];
         if ($user) {
             // Park favoriet status
-            if ($localPark) {
-                $isFavorited = $user->favoriteParks()
-                    ->where('park_id', $localPark->id)
-                    ->exists();
-            }
+            $isFavorited = $user->favoriteParks()
+                ->where('park_id', $localPark->id)
+                ->exists();
 
             // Attraction favorieten ophalen
             $favorites = $user->favoriteAttractions()
@@ -144,7 +145,8 @@ class ParkOverviewController extends Controller
                 $park,
                 [
                     'is_favorited' => $isFavorited,
-                    'internal_id' => $localPark ? $localPark->id : null
+                    'internal_id' => $localPark->id,
+                    'slug' => $localPark->slug
                 ]
             ),
             'shows' => $shows,

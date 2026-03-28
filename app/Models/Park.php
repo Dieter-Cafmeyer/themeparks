@@ -10,6 +10,7 @@ class Park extends Model
     protected $fillable = [
         'api_id',
         'name',
+        'slug',
         'destination_id',
         'latitude',
         'longitude',

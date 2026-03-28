@@ -81,4 +81,5 @@ return [
     'new_password' => 'Nouveau mot de passe',
     'visit_park' => 'Visiter le parc',
     'next_show' => 'Prochain spectacle',
+    'no_more_shows_today' => 'Plus de spectacles aujourd\'hui',
 ];

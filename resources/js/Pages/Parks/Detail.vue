@@ -44,7 +44,7 @@ const currentProps = computed(() => {
 })
 
 function reloadData() {
-    router.get(route('parks.detail', props.park.id), {}, {
+    router.get(route('parks.detail', props.park.slug), {}, {
         preserveState: true,
         preserveScroll: true,
         replace: true,

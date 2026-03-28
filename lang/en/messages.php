@@ -81,4 +81,5 @@ return [
     'new_password' => 'New password',
     'visit_park' => 'Visit park',
     'next_show' => 'Next show',
+    'no_more_shows_today' => 'No more shows today',
 ];

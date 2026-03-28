@@ -8,7 +8,7 @@ use App\Http\Controllers\AttractionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ParkOverviewController::class, 'index'])->name('parks');
-Route::get('/parks/{id}', [ParkOverviewController::class, 'detail'])->name('parks.detail');
+Route::get('/parks/{slug}', [ParkOverviewController::class, 'detail'])->name('parks.detail');
 Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites');
 
 Route::get('/parks/{id}/schedule/{year}/{month}', function($id, $year, $month) {

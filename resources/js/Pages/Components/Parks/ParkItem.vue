@@ -25,7 +25,7 @@ onMounted(async () => {
 
 <template>
     <article class="park_item">
-      <Link :href="route('parks.detail', park.api_id)">
+      <Link :href="route('parks.detail', park.slug)">
         <div class="park_item--wrapper">
           <div class="park_item--image">
             <img :src="imageUrl" :alt="park.name" />
