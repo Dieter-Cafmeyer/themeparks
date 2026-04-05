@@ -79,19 +79,30 @@ const filteredParks = computed(() => {
             </div>
 
             <!-- Favorites list -->
-            <div v-else>
-                <div v-if="view === 'list'" class="park_overview favorites-page_list">
-                    <div v-if="!isGuest && parks.length > 0" class="park_search search form-item">
-                        <input id="search" v-model="search" type="text" :placeholder="t('search_resort')" />
-                        <i class="fas fa-magnifying-glass"></i>
-                    </div>
+            <template v-else>
+                <Transition name="fade" mode="out-in">
+                    <div v-if="view === 'list'" key="list" class="park_overview favorites-page_list">
+                        <Transition name="slide-down" appear>
+                            <div v-if="!isGuest && parks.length > 0" class="park_search search form-item">
+                                <input id="search" v-model="search" type="text" :placeholder="t('search_resort')" />
+                                <i class="fas fa-magnifying-glass"></i>
+                            </div>
+                        </Transition>
 
-                    <ParkItem v-for="park in filteredParks" :key="park.id" :park="park" />
-                </div>
-                <div v-else-if="view === 'map'" class="favorites-page_map">
-                    <ParksMap :parks="props.parks" />
-                </div>
-            </div>
+                        <TransitionGroup name="park-item" tag="div" class="favorites-page--items">
+                            <ParkItem 
+                                v-for="(park, index) in filteredParks" 
+                                :key="park.id" 
+                                :park="park"
+                                :style="{ '--park-delay': index }" 
+                            />
+                        </TransitionGroup>
+                    </div>
+                    <div v-else-if="view === 'map'" key="map" class="favorites-page_map">
+                        <ParksMap :parks="props.parks" />
+                    </div>
+                </Transition>
+            </template>
         </div>
     </div>
 </template>

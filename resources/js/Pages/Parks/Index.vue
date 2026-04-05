@@ -75,24 +75,41 @@ const allParks = computed(() => {
         </div>
 
         <!-- LIST -->
-        <div v-if="view === 'list'">
-            <div class="park_search search form-item">
-                <input id="search" v-model="search" type="text" :placeholder="t('search_resort')" />
-                <i class="fas fa-magnifying-glass"></i>
-            </div>
+        <Transition name="fade" mode="out-in">
+            <div v-if="view === 'list'" key="list">
+                <Transition name="slide-down" appear>
+                    <div class="park_search search form-item">
+                        <input id="search" v-model="search" type="text" :placeholder="t('search_resort')" />
+                        <i class="fas fa-magnifying-glass"></i>
+                    </div>
+                </Transition>
 
-            <div v-for="destination in filteredDestinations" :key="destination.id"
-                class="park_overview space-bottom-md">
-                <h2 class="park_overview--title">
-                    {{ destination.name }}
-                </h2>
+                <TransitionGroup name="list" tag="div">
+                    <div v-for="(destination, destIndex) in filteredDestinations" 
+                        :key="destination.id"
+                        :style="{ '--stagger-delay': destIndex }"
+                        class="park_overview space-bottom-md">
+                        <h2 class="park_overview--title">
+                            {{ destination.name }}
+                        </h2>
 
-                <ParkItem v-for="park in destination.parks" :key="park.id" :park="park" />
+                        <TransitionGroup name="park-item" tag="div" class="park_overview--items">
+                            <ParkItem 
+                                v-for="(park, parkIndex) in destination.parks" 
+                                :key="park.id" 
+                                :park="park"
+                                :style="{ '--park-delay': parkIndex }" 
+                            />
+                        </TransitionGroup>
+                    </div>
+                </TransitionGroup>
             </div>
-        </div>
+        </Transition>
 
         <!-- MAP -->
-        <ParksMap v-if="view === 'map'" :parks="allParks" />
+        <Transition name="fade" mode="out-in">
+            <ParksMap v-if="view === 'map'" key="map" :parks="allParks" />
+        </Transition>
 
     </div>
 </template>

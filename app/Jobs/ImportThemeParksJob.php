@@ -32,14 +32,17 @@ class ImportThemeParksJob implements ShouldQueue
 
             foreach ($apiDestinations as $destination) {
 
-                $destinationModel = Destination::updateOrCreate(
-                    ['api_id' => $destination['id']],
-                    [
-                        'name' => $destination['name'],
-                        'slug' => $destination['slug'],
-                        'is_active' => false,
-                    ]
-                );
+                $destinationModel = Destination::firstOrNew(['api_id' => $destination['id']]);
+                $isNew = !$destinationModel->exists;
+                
+                $destinationModel->name = $destination['name'];
+                $destinationModel->slug = $destination['slug'];
+                
+                if ($isNew) {
+                    $destinationModel->is_active = false;
+                }
+                
+                $destinationModel->save();
 
                 $importedDestinationIds[] = $destination['id'];
 
@@ -57,17 +60,20 @@ class ImportThemeParksJob implements ShouldQueue
                         $counter++;
                     }
 
-                    Park::updateOrCreate(
-                        ['api_id' => $entity['id']],
-                        [
-                            'name' => $entity['name'],
-                            'slug' => $slug,
-                            'destination_id' => $destinationModel->id,
-                            'latitude' => $park['location']['latitude'] ?? null,
-                            'longitude' => $park['location']['longitude'] ?? null,
-                            'is_active' => false,
-                        ]
-                    );
+                    $parkModel = Park::firstOrNew(['api_id' => $entity['id']]);
+                    $isParkNew = !$parkModel->exists;
+                    
+                    $parkModel->name = $entity['name'];
+                    $parkModel->slug = $slug;
+                    $parkModel->destination_id = $destinationModel->id;
+                    $parkModel->latitude = $park['location']['latitude'] ?? null;
+                    $parkModel->longitude = $park['location']['longitude'] ?? null;
+                    
+                    if ($isParkNew) {
+                        $parkModel->is_active = false;
+                    }
+                    
+                    $parkModel->save();
 
                     $importedParkIds[] = $entity['id'];
                 }

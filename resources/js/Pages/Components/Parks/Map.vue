@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, nextTick, computed } from 'vue'
+import { onMounted, onActivated, ref, watch, nextTick, computed } from 'vue'
 
 import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -107,6 +107,15 @@ onMounted(async () => {
 
 
   addMarkers()
+})
+
+// Resize map when component is activated from KeepAlive
+onActivated(() => {
+  if (map) {
+    nextTick(() => {
+      map.resize()
+    })
+  }
 })
 
 // Watch filteredChildren
@@ -254,20 +263,24 @@ function clearMarkers() {
 </script>
 
 <template>
-  <div class="map-filters space-top-md space-bottom-md">
-    <label>
-      <SwitchToggle v-model="showAttractions" />
-      <span>{{ t('attractions_title') }}</span>
-    </label>
-    <label>
-      <SwitchToggle v-model="showShows" />
-      <span>{{ t('shows_title') }}</span>
-    </label>
-    <label>
-      <SwitchToggle v-model="showRestaurants" />
-      <span>Restaurants</span>
-    </label>
-  </div>
+  <Transition name="slide-down" appear>
+    <div class="map-filters space-top-md space-bottom-md">
+      <label>
+        <SwitchToggle v-model="showAttractions" />
+        <span>{{ t('attractions_title') }}</span>
+      </label>
+      <label>
+        <SwitchToggle v-model="showShows" />
+        <span>{{ t('shows_title') }}</span>
+      </label>
+      <label>
+        <SwitchToggle v-model="showRestaurants" />
+        <span>Restaurants</span>
+      </label>
+    </div>
+  </Transition>
 
-  <div ref="mapContainer" id="map"></div>
+  <Transition name="fade" appear>
+    <div ref="mapContainer" id="map"></div>
+  </Transition>
 </template>

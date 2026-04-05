@@ -139,63 +139,125 @@ watch(selectedMonth, loadSchedule)
 </script>
 
 <template>
-    <div class="openinghours">
-        <div class="openinghours_wrapper">
-            <div class="openinghours_header">
-                <h3>{{ t('opening_hours') }}</h3>
-                <!-- Close button -->
-                <button class="openinghours_close" @click="$emit('close')">
-                    &times;
-                </button>
-            </div>
-
-            <!-- Month dropdown -->
-            <div class="openinghours_control form-item">
-                <div class="select-wrapper">
-                    <select v-model="selectedMonth" class="month-picker">
-                        <option v-for="month in availableMonths" :key="month.value" :value="month.value">
-                            {{ month.label }}
-                        </option>
-                    </select>
-                </div>
-            </div>
-
-            <div v-if="loading" class="loading"><i class="fa-solid fa-spinner"></i></div>
-            <div v-else-if="error">{{ error }}</div>
-
-            <div v-else-if="groupedSchedule.length" class="openinghours_list">
-                <div v-for="day in groupedSchedule" :key="day.date" class="openinghours_day" :class="{
-                    'is-today': day.date === todayString,
-                    'is-open-now': day.date === todayString && isOpenNow
-                }">
-
-                    <div class="openinghours_day--header">
-                        <span class="day">{{ formatDayMonth(day.date).day }}</span>
-                        <span class="month">{{ formatDayMonth(day.date).month }}</span>
-                        <span v-if="day.date === todayString && isOpenNow" class="openinghours_day--status">
-                            {{ t('open_now') }}
-                        </span>
+    <Transition name="modal-fade" appear>
+        <div class="openinghours">
+            <Transition name="modal-content" appear>
+                <div class="openinghours_wrapper">
+                    <div class="openinghours_header">
+                        <h3>{{ t('opening_hours') }}</h3>
+                        <!-- Close button -->
+                        <button class="openinghours_close" @click="$emit('close')">
+                            &times;
+                        </button>
                     </div>
 
-                    <div class="openinghours_day--entry">
-                        <div v-for="entry in day.entries" :key="entry.type + entry.openingTime"
-                            class="openinghours_day--entry-item">
-                            <p v-if="entry.type === 'OPERATING'">
-                                <span>{{ t('opening_hours') }}</span>
-                                <span class="dots"></span>
-                                <span>{{ formatTime(entry.openingTime) }} – {{ formatTime(entry.closingTime) }}</span>
-                            </p>
-                            <p v-else>
-                                <span>{{ entry.description }}:</span>
-                                <span class="dots"></span>
-                                <span>{{ formatTime(entry.openingTime) }} – {{ formatTime(entry.closingTime) }}</span>
-                            </p>
+                    <!-- Month dropdown -->
+                    <div class="openinghours_control form-item">
+                        <div class="select-wrapper">
+                            <select v-model="selectedMonth" class="month-picker">
+                                <option v-for="month in availableMonths" :key="month.value" :value="month.value">
+                                    {{ month.label }}
+                                </option>
+                            </select>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div v-else>{{ t('no_schedule_available') }}</div>
+                    <div v-if="loading" class="loading"><i class="fa-solid fa-spinner"></i></div>
+                    <div v-else-if="error">{{ error }}</div>
+
+                    <TransitionGroup v-else-if="groupedSchedule.length" name="schedule-list" tag="div" class="openinghours_list">
+                        <div v-for="(day, index) in groupedSchedule" :key="day.date" 
+                            class="openinghours_day" 
+                            :class="{
+                                'is-today': day.date === todayString,
+                                'is-open-now': day.date === todayString && isOpenNow
+                            }"
+                            :style="{ '--schedule-delay': index }">
+
+                            <div class="openinghours_day--header">
+                                <span class="day">{{ formatDayMonth(day.date).day }}</span>
+                                <span class="month">{{ formatDayMonth(day.date).month }}</span>
+                                <span v-if="day.date === todayString && isOpenNow" class="openinghours_day--status">
+                                    {{ t('open_now') }}
+                                </span>
+                            </div>
+
+                            <div class="openinghours_day--entry">
+                                <div v-for="entry in day.entries" :key="entry.type + entry.openingTime"
+                                    class="openinghours_day--entry-item">
+                                    <p v-if="entry.type === 'OPERATING'">
+                                        <span>{{ t('opening_hours') }}</span>
+                                        <span class="dots"></span>
+                                        <span>{{ formatTime(entry.openingTime) }} – {{ formatTime(entry.closingTime) }}</span>
+                                    </p>
+                                    <p v-else>
+                                        <span>{{ entry.description }}:</span>
+                                        <span class="dots"></span>
+                                        <span>{{ formatTime(entry.openingTime) }} – {{ formatTime(entry.closingTime) }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </TransitionGroup>
+
+                    <div v-else>{{ t('no_schedule_available') }}</div>
+                </div>
+            </Transition>
         </div>
-    </div>
+    </Transition>
 </template>
+
+<style scoped>
+/* Modal animations */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+    opacity: 0;
+}
+
+.modal-content-enter-active {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-content-leave-active {
+    transition: all 0.3s ease;
+}
+
+.modal-content-enter-from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+}
+
+.modal-content-leave-to {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+}
+
+/* Schedule list animations */
+.schedule-list-enter-active {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition-delay: calc(var(--schedule-delay, 0) * 0.05s);
+}
+
+.schedule-list-leave-active {
+    transition: all 0.3s ease;
+}
+
+.schedule-list-enter-from {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.95);
+}
+
+.schedule-list-leave-to {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+}
+
+.schedule-list-move {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+</style>

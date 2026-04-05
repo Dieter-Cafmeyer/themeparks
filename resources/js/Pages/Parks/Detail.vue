@@ -124,7 +124,28 @@ function toggleOpeningHours() {
             <Toggle :attractions_title="t('attractions_title')" :shows_title="t('shows_title')"
                 :map_title="t('map_title')" v-model:activeTab="activeTab" :showsToggle="showsToggle" />
 
-            <component :is="currentComponent" v-bind="currentProps" />
+            <KeepAlive>
+                <component :is="currentComponent" v-bind="currentProps" />
+            </KeepAlive>
         </div>
     </div>
 </template>
+
+<style scoped>
+/* Component transition via CSS */
+.attractions,
+.shows {
+    animation: fadeSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+</style>

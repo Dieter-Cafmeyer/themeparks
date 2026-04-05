@@ -98,6 +98,31 @@ watch(() => page.url, () => {
     </header>
 
     <main>
-        <slot />
+        <Transition name="page" mode="out-in">
+            <div :key="$page.url">
+                <slot />
+            </div>
+        </Transition>
     </main>
 </template>
+
+<style scoped>
+/* Page transition animations */
+.page-enter-active {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.page-leave-active {
+    transition: all 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+}
+
+.page-enter-from {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.page-leave-to {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+</style>

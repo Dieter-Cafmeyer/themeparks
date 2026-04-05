@@ -84,24 +84,37 @@ const hasFavorites = computed(() => {
 
 <template>
     <div class="attractions">
-        <div class="attractions_filters">
-            <div class="search form-item attractions_search">
-                <input id="search" v-model="search" type="text" :placeholder="t('search_title_attractions')" />
-                <i class="fas fa-magnifying-glass"></i>
+        <Transition name="slide-down" appear>
+            <div class="attractions_filters">
+                <div class="search form-item attractions_search">
+                    <input id="search" v-model="search" type="text" :placeholder="t('search_title_attractions')" />
+                    <i class="fas fa-magnifying-glass"></i>
+                </div>
             </div>
-        </div>
+        </Transition>
 
-        <div v-if="hasFavorites" class="attractions_favorites-toggle">
-            <label>
-                <SwitchToggle v-model="showFavoritesOnly" :star="true" />
-            </label>
-        </div>
+        <Transition name="fade" appear>
+            <div v-if="hasFavorites" class="attractions_favorites-toggle">
+                <label>
+                    <SwitchToggle v-model="showFavoritesOnly" :star="true" />
+                </label>
+            </div>
+        </Transition>
 
         <div v-for="(group, status) in groupedAttractions" :key="status" class="attractions_group ">
             <template v-if="group.length > 0">
-                <h2 class="space-bottom-md space-top-md">{{ status }} </h2>
+                <Transition name="fade" appear>
+                    <h2 class="space-bottom-md space-top-md">{{ status }} </h2>
+                </Transition>
 
-                <AttractionItem v-for="attraction in group" :key="attraction.id" :attraction="attraction" />
+                <TransitionGroup name="attraction-list" tag="div">
+                    <AttractionItem 
+                        v-for="(attraction, index) in group" 
+                        :key="attraction.id" 
+                        :attraction="attraction"
+                        :style="{ '--index': index }" 
+                    />
+                </TransitionGroup>
             </template>
         </div>
     </div>

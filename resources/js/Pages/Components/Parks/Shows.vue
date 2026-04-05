@@ -22,8 +22,12 @@ function isPast(showtime) {
 <template>
     <h2 class="space-top-md space-bottom-md">{{ t('shows_today') }}</h2>
 
-    <div class="shows">
-        <article v-for="item in shows" :key="item.id" class="show_item">
+    <TransitionGroup name="show-list" tag="div" class="shows" appear>
+        <article 
+            v-for="(item, index) in shows" 
+            :key="item.id" 
+            class="show_item"
+            :style="{ '--show-delay': index }">
             <h3>{{ item.name }}</h3>
 
             <div v-if="item.status === 'CLOSED'" class="show_item--times">
@@ -37,5 +41,5 @@ function isPast(showtime) {
                 </div>
             </div>
         </article>
-    </div>
+    </TransitionGroup>
 </template>
