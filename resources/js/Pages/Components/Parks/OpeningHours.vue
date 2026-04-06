@@ -3,6 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 
 import axios from 'axios'
+import WeatherDetail from './WeatherDetail.vue'
 
 const { props: pageProps } = usePage();
 const t = (key) => pageProps.translations?.[key] ?? key;
@@ -18,9 +19,12 @@ const emit = defineEmits(['close'])
    State
 ================================ */
 const schedule = ref([])
+const weather = ref({})
 const loading = ref(false)
 const error = ref(null)
 const selectedMonth = ref(new Date().toISOString().slice(0, 7)) // "YYYY-MM"
+const selectedWeather = ref(null)
+const selectedWeatherDate = ref(null)
 
 /* ===============================
    Helpers
@@ -64,11 +68,31 @@ async function loadSchedule() {
     const { year, month } = getYearMonth()
 
     try {
-        const response = await axios.get(`/parks/${props.park.id}/schedule/${year}/${month}`)
-        schedule.value = response.data.schedule ?? []
+        const [scheduleResponse, weatherResponse] = await Promise.all([
+            axios.get(`/parks/${props.park.internal_id}/schedule/${year}/${month}`),
+            axios.get(`/parks/${props.park.internal_id}/weather/${year}/${month}`)
+        ]);
+        
+        schedule.value = scheduleResponse.data.schedule ?? []
+        
+        // Map weather data by date
+        if (weatherResponse.data?.daily?.time) {
+            const weatherMap = {}
+            weatherResponse.data.daily.time.forEach((date, index) => {
+                weatherMap[date] = {
+                    temperature_2m_max: weatherResponse.data.daily.temperature_2m_max[index],
+                    temperature_2m_min: weatherResponse.data.daily.temperature_2m_min[index],
+                    weathercode: weatherResponse.data.daily.weathercode[index],
+                    precipitation_sum: weatherResponse.data.daily.precipitation_sum[index],
+                    windspeed_10m_max: weatherResponse.data.daily.windspeed_10m_max[index],
+                }
+            })
+            weather.value = weatherMap
+        }
     } catch (e) {
         error.value = 'Failed to load schedule'
         schedule.value = []
+        weather.value = {}
     } finally {
         loading.value = false
     }
@@ -132,6 +156,52 @@ const isOpenNow = computed(() => {
 })
 
 /* ===============================
+   Weather helpers
+================================ */
+const weatherCodeMap = {
+    0: { icon: 'fa-sun', color: '#FFD700' },
+    1: { icon: 'fa-sun', color: '#FFD700' },
+    2: { icon: 'fa-cloud-sun', color: '#87CEEB' },
+    3: { icon: 'fa-cloud', color: '#B0C4DE' },
+    45: { icon: 'fa-smog', color: '#DCDCDC' },
+    48: { icon: 'fa-smog', color: '#DCDCDC' },
+    51: { icon: 'fa-cloud-rain', color: '#4682B4' },
+    53: { icon: 'fa-cloud-rain', color: '#4682B4' },
+    55: { icon: 'fa-cloud-rain', color: '#4682B4' },
+    61: { icon: 'fa-cloud-showers-heavy', color: '#1E90FF' },
+    63: { icon: 'fa-cloud-showers-heavy', color: '#1E90FF' },
+    65: { icon: 'fa-cloud-showers-heavy', color: '#1E90FF' },
+    71: { icon: 'fa-snowflake', color: '#E0F8FF' },
+    73: { icon: 'fa-snowflake', color: '#E0F8FF' },
+    75: { icon: 'fa-snowflake', color: '#E0F8FF' },
+    77: { icon: 'fa-snowflake', color: '#E0F8FF' },
+    80: { icon: 'fa-cloud-rain', color: '#4682B4' },
+    81: { icon: 'fa-cloud-showers-heavy', color: '#1E90FF' },
+    82: { icon: 'fa-cloud-showers-heavy', color: '#00008B' },
+    85: { icon: 'fa-snowflake', color: '#E0F8FF' },
+    86: { icon: 'fa-snowflake', color: '#E0F8FF' },
+    95: { icon: 'fa-bolt', color: '#FFD700' },
+    96: { icon: 'fa-bolt', color: '#FFD700' },
+    99: { icon: 'fa-bolt', color: '#FFD700' },
+}
+
+function getWeatherIcon(code) {
+    return weatherCodeMap[code] || weatherCodeMap[0]
+}
+
+function showWeatherDetail(date) {
+    if (weather.value[date]) {
+        selectedWeather.value = weather.value[date]
+        selectedWeatherDate.value = date
+    }
+}
+
+function closeWeatherDetail() {
+    selectedWeather.value = null
+    selectedWeatherDate.value = null
+}
+
+/* ===============================
    Lifecycle
 ================================ */
 onMounted(loadSchedule)
@@ -175,11 +245,28 @@ watch(selectedMonth, loadSchedule)
                             :style="{ '--schedule-delay': index }">
 
                             <div class="openinghours_day--header">
-                                <span class="day">{{ formatDayMonth(day.date).day }}</span>
-                                <span class="month">{{ formatDayMonth(day.date).month }}</span>
-                                <span v-if="day.date === todayString && isOpenNow" class="openinghours_day--status">
-                                    {{ t('open_now') }}
-                                </span>
+                                <div class="openinghours_day--date">
+                                    <span class="day">{{ formatDayMonth(day.date).day }}</span>
+                                    <span class="month">{{ formatDayMonth(day.date).month }}</span>
+                                </div>
+
+                                <div>
+                                    <span v-if="day.date === todayString && isOpenNow" class="openinghours_day--status">
+                                        {{ t('open_now') }}
+                                    </span>
+                                </div>
+
+                                <div class="openinghours_day--mini" v-if="weather[day.date]">
+                                <div v-if="weather[day.date]" 
+                                    class="openinghours_day--weather"
+                                    @click="showWeatherDetail(day.date)"
+                                    :title="t('view_weather_details') ?? 'View weather details'">
+                                    <i class="fa-solid" 
+                                        :class="getWeatherIcon(weather[day.date].weathercode).icon"
+                                        :style="{ color: getWeatherIcon(weather[day.date].weathercode).color }"></i>
+                                    <span class="temperature">{{ Math.round(weather[day.date].temperature_2m_max) }}°</span>
+                                </div>
+                            </div>
                             </div>
 
                             <div class="openinghours_day--entry">
@@ -197,12 +284,30 @@ watch(selectedMonth, loadSchedule)
                                     </p>
                                 </div>
                             </div>
+
+                            <div class="openinghours_day--meta" v-if="weather[day.date]">
+                                <div v-if="weather[day.date]" 
+                                    class="openinghours_day--weather"
+                                    @click="showWeatherDetail(day.date)"
+                                    :title="t('view_weather_details') ?? 'View weather details'">
+                                    <i class="fa-solid" 
+                                        :class="getWeatherIcon(weather[day.date].weathercode).icon"
+                                        :style="{ color: getWeatherIcon(weather[day.date].weathercode).color }"></i>
+                                    <span class="temperature">{{ Math.round(weather[day.date].temperature_2m_max) }}°</span>
+                                </div>
+                            </div>
                         </div>
                     </TransitionGroup>
 
                     <div v-else>{{ t('no_schedule_available') }}</div>
                 </div>
             </Transition>
+            
+            <WeatherDetail 
+                v-if="selectedWeather" 
+                :weather="selectedWeather"
+                :date="selectedWeatherDate"
+                @close="closeWeatherDetail" />
         </div>
     </Transition>
 </template>

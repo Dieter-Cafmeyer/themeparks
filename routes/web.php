@@ -6,13 +6,68 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AttractionController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
+use App\Models\Park;
 
 Route::get('/', [ParkOverviewController::class, 'index'])->name('parks');
 Route::get('/parks/{slug}', [ParkOverviewController::class, 'detail'])->name('parks.detail');
 Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites');
 
 Route::get('/parks/{id}/schedule/{year}/{month}', function($id, $year, $month) {
-    $response = Http::get("https://api.themeparks.wiki/v1/entity/{$id}/schedule/{$year}/{$month}");
+    $park = Park::find($id);
+    
+    if (!$park || !$park->api_id) {
+        return response()->json(['error' => 'Park not found'], 404);
+    }
+    
+    $response = Http::get("https://api.themeparks.wiki/v1/entity/{$park->api_id}/schedule/{$year}/{$month}");
+    return $response->json();
+});
+
+Route::get('/parks/{id}/weather/{year}/{month}', function($id, $year, $month) {
+    $park = Park::find($id);
+    
+    if (!$park || !$park->latitude || !$park->longitude) {
+        return response()->json(['error' => 'Park not found or coordinates missing'], 404);
+    }
+    
+    // Calculate date range for the month
+    $requestedStart = "{$year}-{$month}-01";
+    $lastDay = date('t', strtotime($requestedStart));
+    $requestedEnd = "{$year}-{$month}-{$lastDay}";
+    
+    // Open-Meteo free API only supports ~16 days forecast
+    $today = date('Y-m-d');
+    $maxForecastDate = date('Y-m-d', strtotime($today . ' +14 days'));
+    
+    // Adjust dates to stay within allowed range
+    $startDate = max($today, $requestedStart);
+    $endDate = min($maxForecastDate, $requestedEnd);
+    
+    // If start date is after end date, return empty data
+    if ($startDate > $endDate) {
+        return response()->json([
+            'daily' => [
+                'time' => [],
+                'temperature_2m_max' => [],
+                'temperature_2m_min' => [],
+                'weathercode' => [],
+                'precipitation_sum' => [],
+                'windspeed_10m_max' => [],
+            ]
+        ]);
+    }
+    
+    // Open-Meteo API call (free, no API key required)
+    $response = Http::get('https://api.open-meteo.com/v1/forecast', [
+        'latitude' => $park->latitude,
+        'longitude' => $park->longitude,
+        'daily' => 'temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum,windspeed_10m_max',
+        'timezone' => 'auto',
+        'start_date' => $startDate,
+        'end_date' => $endDate,
+    ]);
+    
     return $response->json();
 });
 

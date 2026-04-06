@@ -20,7 +20,7 @@
         flex-wrap: wrap;
         gap: 10px;
         width: 100%;
-        
+
         &--title {
             text-transform: uppercase;
             font-size: .9rem;
@@ -289,7 +289,7 @@
         &:hover {
             transform: scale(1.01);
 
-            > div {
+            >div {
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
         }
@@ -699,7 +699,7 @@
 
         &--header {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             flex-direction: column;
             width: 70px;
@@ -713,9 +713,19 @@
                 flex-direction: row;
                 gap: 5px;
                 padding: 10px;
-
             }
+        }
 
+        &--date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+
+            @media screen and (max-width: 460px) {
+                flex-direction: row;
+                gap: 5px;
+            }
 
             span {
                 &:first-of-type {
@@ -723,9 +733,70 @@
                     font-weight: 700;
                 }
             }
+        }
+
+        &--mini {
+            display: none;
+            border: 1px solid variables.$border-color;
+            border-radius: 15px;
+
+            @media screen and (max-width: 460px) {
+                display: flex;
+            }
+
+        }
+
+        &--meta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 70px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            border: rgba(6, 6, 85, 0.2901960784) 1px solid;
+
+            @media screen and (max-width: 460px) {
+               display: none;
+            }
+        }
+
+        &--weather {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            background-color: rgba(255, 255, 255, 0.5);
+            min-width: 50px;
+
+            @media screen and (max-width: 460px) {
+                flex-direction: row;
+                gap: 6px;
+                padding: 6px 10px;
+            }
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.9);
+                transform: scale(1.05);
+            }
 
             i {
-                font-size: 1rem;
+                font-size: 1.2rem;
+
+                @media screen and (max-width: 460px) {
+                    font-size: 1rem;
+                }
+            }
+
+            .temperature {
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: #333;
             }
         }
 
@@ -809,23 +880,23 @@
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         position: relative;
-        
+
         i {
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        
+
         &:hover:not(.active) {
             background-color: rgba(variables.$primary-color, 0.05);
-            
+
             i {
                 transform: scale(1.1);
             }
         }
-        
+
         &.active {
             color: #fff;
             background-color: variables.$primary-color;
-            
+
             i {
                 animation: bounce-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
@@ -838,9 +909,11 @@
         transform: scale(0.8);
         opacity: 0.5;
     }
+
     50% {
         transform: scale(1.1);
     }
+
     100% {
         transform: scale(1);
         opacity: 1;
@@ -870,6 +943,7 @@
         opacity: 0;
         transform: translateY(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -919,19 +993,19 @@
 // Enhanced hover for park items
 .park_item {
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    
+
     &:hover {
         transform: translateY(-3px) scale(1.01);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        
+
         .park_item--image img {
             transform: scale(1.05);
         }
     }
-    
+
     &--image {
         overflow: hidden;
-        
+
         img {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -965,9 +1039,9 @@
 // Enhanced attraction item hover
 .attractions_item {
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    
+
     &:hover {
-        transform:scale(1.005);
+        transform: scale(1.005);
     }
 }
 
@@ -986,3 +1060,175 @@
     opacity: 0;
     transform: translateY(-10px);
 }
+
+
+.weather-detail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 1rem;
+
+    &_wrapper {
+        background: white;
+        border-radius: 16px;
+        max-width: 500px;
+        width: 100%;
+        max-height: 90vh;
+        overflow: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        border-bottom: 1px solid #eee;
+
+        h3 {
+            margin: 0;
+             font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 600;
+        }
+    }
+
+    &_close {
+        background: none;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        color: #666;
+        line-height: 1;
+        padding: 0;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s;
+        border: 1px solid variables.$border-color;
+
+        &:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+    }
+
+    &_content {
+        padding: 2rem;
+        text-align: center;
+    }
+
+    &_date {
+        font-size: 1.1rem;
+        color: #666;
+        text-transform: capitalize;
+    }
+
+    &_icon {
+        font-size: 6rem;
+        margin: clamp(.5rem, 1rem, 2rem) 0;
+    }
+
+    &_description {
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        color: #333;
+    }
+
+    &_stats {
+        display: flex;
+        flex-wrap: wrap;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4%;
+        margin-top: 2rem;
+    }
+}
+
+.weather-stat {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 12px;
+    transition: transform 0.2s;
+    width: 48%;
+    margin-bottom: 4%;
+    border: 1px solid variables.$border-color;
+    i {
+        font-size: 2rem;
+        color: variables.$primary-color;
+        margin-bottom: 0.5rem;
+    }
+
+    &_label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+    }
+
+    &_value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+}
+
+/* Modal animations */
+.modal-fade {
+
+    &-enter-active,
+    &-leave-active {
+        transition: opacity 0.3s ease;
+    }
+
+    &-enter-from,
+    &-leave-to {
+        opacity: 0;
+    }
+}
+
+.modal-content {
+    &-enter-active {
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    &-leave-active {
+        transition: all 0.3s ease;
+    }
+
+    &-enter-from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+
+    &-leave-to {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .weather-detail {
+        &_stats {
+            grid-template-columns: 1fr;
+        }
+
+        &_icon {
+            font-size: 4rem;
+        }
+
+        &_description {
+            font-size: 1.2rem;
+        }
+    }
+}
+

@@ -134,6 +134,8 @@ async function toggleFavorite(e) {
     <!-- Item -->
     <div class="attractions_item" @click="tryOpenPopup">
         <div :class="statusClass + ' attractions_item--content'">
+            {{ attraction?.externalId }}
+
             <h3>
                 {{ attraction.name }}
                 <i v-if="user" :class="[attraction.is_favorited ? 'fas fa-star favorited' : 'far fa-star']"
