@@ -85,5 +85,7 @@ class ImportThemeParksJob implements ShouldQueue
             Park::whereNotIn('api_id', $importedParkIds)
                 ->update(['is_active' => false]);
         });
+
+        SyncArendzMetadataJob::dispatch();
     }
 }

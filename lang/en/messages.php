@@ -113,4 +113,5 @@ return [
     'weather_thunderstorm' => 'Thunderstorm',
     'weather_thunderstorm_slight_hail' => 'Thunderstorm with slight hail',
     'weather_thunderstorm_heavy_hail' => 'Thunderstorm with heavy hail',
+    'sync_arendz_metadata' => 'Sync Arendz metadata',
 ];

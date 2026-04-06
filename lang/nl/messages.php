@@ -113,4 +113,5 @@ return [
     'weather_thunderstorm' => 'Onweer',
     'weather_thunderstorm_slight_hail' => 'Onweer met lichte hagel',
     'weather_thunderstorm_heavy_hail' => 'Onweer met zware hagel',
+    'sync_arendz_metadata' => 'Arendz metadata synchroniseren',
 ];

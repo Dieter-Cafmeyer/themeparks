@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttractionMetadata;
 use App\Models\Destination;
 use App\Models\Park;
 use App\Models\UserFavoriteAttraction;
@@ -51,6 +52,7 @@ class ParkOverviewController extends Controller
                 'name',
                 'slug',
             ]);
+
         }
 
         return Inertia::render('Parks/Index', [
@@ -135,8 +137,18 @@ class ParkOverviewController extends Controller
             return str_contains(strtolower($child['entityType'] ?? ''), 'attraction');
         });
 
-        $attractions = array_map(function ($attraction) use ($favorites) {
+        $attractionMetadata = AttractionMetadata::query()
+            ->where('park_id', $localPark->id)
+            ->whereNotNull('themeparks_api_id')
+            ->get()
+            ->keyBy('themeparks_api_id');
+
+        $attractions = array_map(function ($attraction) use ($favorites, $attractionMetadata) {
+            $metadata = $attractionMetadata->get($attraction['id']);
             $attraction['is_favorited'] = in_array($attraction['id'], $favorites);
+            $attraction['external_image_url'] = $metadata?->arendz_image_url;
+            $attraction['external_description_nl'] = $metadata?->arendz_description_nl;
+            $attraction['arendz_id'] = $metadata?->arendz_id;
             return $attraction;
         }, $attractions);
 
@@ -146,7 +158,10 @@ class ParkOverviewController extends Controller
                 [
                     'is_favorited' => $isFavorited,
                     'internal_id' => $localPark->id,
-                    'slug' => $localPark->slug
+                    'slug' => $localPark->slug,
+                    'external_image_url' => $localPark->arendz_image_url,
+                    'external_description_nl' => $localPark->arendz_description_nl,
+                    'arendz_id' => $localPark->arendz_id,
                 ]
             ),
             'shows' => $shows,

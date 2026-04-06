@@ -31,6 +31,7 @@ onMounted(async () => {
             <img :src="imageUrl" :alt="park.name" />
           </div>
           
+          
           <div class="park_item--content">
             <h4 class="text-lg font-semibold">{{ park.name }}</h4>
           </div>

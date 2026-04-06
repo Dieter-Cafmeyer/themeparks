@@ -84,25 +84,21 @@ const allParks = computed(() => {
                     </div>
                 </Transition>
 
-                <TransitionGroup name="list" tag="div">
-                    <div v-for="(destination, destIndex) in filteredDestinations" 
-                        :key="destination.id"
-                        :style="{ '--stagger-delay': destIndex }"
-                        class="park_overview space-bottom-md">
-                        <h2 class="park_overview--title">
-                            {{ destination.name }}
-                        </h2>
+                <div v-for="(destination, destIndex) in filteredDestinations" 
+                    :key="destination.id"
+                    :style="{ '--stagger-delay': destIndex }"
+                    class="park_overview space-bottom-md">
+                    <h2 class="park_overview--title">
+                        {{ destination.name }}
+                    </h2>
 
-                        <TransitionGroup name="park-item" tag="div" class="park_overview--items">
-                            <ParkItem 
-                                v-for="(park, parkIndex) in destination.parks" 
-                                :key="park.id" 
-                                :park="park"
-                                :style="{ '--park-delay': parkIndex }" 
-                            />
-                        </TransitionGroup>
-                    </div>
-                </TransitionGroup>
+                    <ParkItem 
+                        v-for="(park, parkIndex) in destination.parks" 
+                        :key="park.id" 
+                        :park="park"
+                        :style="{ '--park-delay': parkIndex }" 
+                    />
+                </div>
             </div>
         </Transition>
 

@@ -113,4 +113,5 @@ return [
     'weather_thunderstorm' => 'Orage',
     'weather_thunderstorm_slight_hail' => 'Orage avec grêle légère',
     'weather_thunderstorm_heavy_hail' => 'Orage avec forte grêle',
+    'sync_arendz_metadata' => 'Synchroniser les métadonnées Arendz',
 ];

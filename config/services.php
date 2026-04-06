@@ -34,4 +34,8 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+
+    'arendz' => [
+        'base_url' => env('ARENDZ_THEMEPARKS_URL', 'https://tp.arendz.nl'),
+    ],
 ];

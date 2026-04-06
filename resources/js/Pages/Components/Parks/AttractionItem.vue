@@ -13,10 +13,7 @@ const props = defineProps({
 
 const showPopup = ref(false);
 function tryOpenPopup() {
-    // Alleen popup openen als de attractie OPERATING is
-    if (props.attraction.status === 'OPERATING') {
-        showPopup.value = true
-    }
+    showPopup.value = true
 }
 
 const queue = computed(() => props.attraction?.queue ?? {})
@@ -132,10 +129,8 @@ async function toggleFavorite(e) {
 
 <template>
     <!-- Item -->
-    <div class="attractions_item" @click="tryOpenPopup">
+    <div class="attractions_item" :class="{ 'has-image': attraction.external_image_url }" @click="tryOpenPopup">
         <div :class="statusClass + ' attractions_item--content'">
-            {{ attraction?.externalId }}
-
             <h3>
                 {{ attraction.name }}
                 <i v-if="user" :class="[attraction.is_favorited ? 'fas fa-star favorited' : 'far fa-star']"
@@ -188,8 +183,9 @@ async function toggleFavorite(e) {
             <button class="popup_close" @click="showPopup = false">×</button>
 
             <h2>{{ attraction.name }}</h2>
+            <img v-if="attraction.external_image_url" class="popup_image" :src="attraction.external_image_url" :alt="attraction.name" />
 
-            <div class="popup_times">
+            <div class="popup_times" v-if="attraction.status === 'OPERATING'">
                 <div v-if="standby">
                     <h4> {{ t('standby') }} </h4>
                     <p>{{ standby.waitTime ?? '0' }}</p>
@@ -203,7 +199,7 @@ async function toggleFavorite(e) {
                 </div>
             </div>
 
-            <div v-if="returnTime" class="popup_return">
+            <div v-if="returnTime && attraction.status === 'OPERATING'" class="popup_return">
                 <h4>{{ t('return_time_available') }}</h4>
                 <p v-if="returnTime.state === 'AVAILABLE'">
                     <i class="fas fa-circle-check"></i>
@@ -220,7 +216,7 @@ async function toggleFavorite(e) {
                 </p>
             </div>
 
-            <div v-if="paidReturnTime" class="popup_return">
+            <div v-if="paidReturnTime && attraction.status === 'OPERATING'" class="popup_return">
                 <h4>{{ t('paid_return_available') }}</h4>
                 <p>
                     <i class="fas fa-circle-check"></i>
@@ -237,7 +233,7 @@ async function toggleFavorite(e) {
                 </p>
             </div>
 
-            <div v-if="boardingGroup">
+            <div v-if="boardingGroup && attraction.status === 'OPERATING'">
                 <h4>{{ t('boarding_group') }}</h4>
                 <p>
                     {{ t('status') }}:
@@ -260,7 +256,7 @@ async function toggleFavorite(e) {
                 </p>
             </div>
 
-            <div v-if="paidStandby">
+            <div v-if="paidStandby && attraction.status === 'OPERATING'">
                 <h4>{{ t('paid_standby') }}</h4>
                 <p>
                     {{ t('wait_time') }}:
@@ -268,6 +264,10 @@ async function toggleFavorite(e) {
                     {{ t('minutes') }}
                 </p>
             </div>
+
+            <p v-if="attraction.external_description_nl && pageProps.locale === 'nl'" class="popup_description">
+                {{ attraction.external_description_nl }}
+            </p>
         </div>
     </div>
 </template>

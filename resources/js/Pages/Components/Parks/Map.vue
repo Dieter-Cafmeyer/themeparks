@@ -215,6 +215,9 @@ function addMarkers() {
       let html = `<h4>${a.name}</h4>`;
 
       if (a.entityType === "ATTRACTION") {
+        if (attraction?.external_image_url) {
+          html += `<img class="popup_image" src="${attraction.external_image_url}" alt="${attraction.name}" />`;
+        }
         if (attraction?.status && attraction.status !== 'OPERATING') {
           html += `<strong>${t('status')}</strong><p>${t(attraction.status.toLowerCase())}</p>`;
         }
