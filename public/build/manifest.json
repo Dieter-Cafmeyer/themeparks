@@ -2183,12 +2183,12 @@
     "file": "assets/zw-U0m7oJ5e.svg",
     "src": "node_modules/flag-icons/flags/4x3/zw.svg"
   },
-  "resources/assets/logo.png": {
-    "file": "assets/logo-TsCV1G6H.png",
-    "src": "resources/assets/logo.png"
+  "resources/assets/coaster.svg": {
+    "file": "assets/coaster-De4duLVb.svg",
+    "src": "resources/assets/coaster.svg"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-DKMx6oeH.css",
+    "file": "assets/app-Dr7TnQxh.css",
     "src": "resources/css/app.scss",
     "isEntry": true,
     "name": "app",
@@ -2197,16 +2197,16 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DLMpiXNH.js",
+    "file": "assets/app-Bqs1o74z.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-CZ1GcGA4.css",
-      "assets/app-DKMx6oeH.css"
+      "assets/app-BsCz5-vX.css",
+      "assets/app-Dr7TnQxh.css"
     ],
     "assets": [
-      "assets/logo-TsCV1G6H.png",
+      "assets/coaster-De4duLVb.svg",
       "assets/xx-zm_JmrXl.svg",
       "assets/xx-DHLZWhOc.svg",
       "assets/ad-B18i8NGa.svg",
