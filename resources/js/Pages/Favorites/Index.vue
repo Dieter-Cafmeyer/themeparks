@@ -81,7 +81,6 @@ const filteredParks = computed(() => {
             <!-- Favorites list -->
             <template v-else>
                     <div v-if="view === 'list'" key="list" class="park_overview favorites-page_list">
-                       
                         <ParkItem 
                             v-for="(park, index) in filteredParks" 
                             :key="park.id" 
